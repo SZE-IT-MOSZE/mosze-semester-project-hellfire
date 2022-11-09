@@ -3,7 +3,7 @@
 
 #include "choice.h"
 
-class scene
+class Scene
 {
     public:
         void chooseChoice();

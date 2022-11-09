@@ -1,5 +1,5 @@
 #include "scene.h"
 
-void scene::chooseChoice() {
+void Scene::chooseChoice() {
 
 }
