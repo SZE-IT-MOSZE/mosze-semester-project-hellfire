@@ -1,8 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Chapter.h"
+#include "Player.h"
 
-static class Game
+class Game
 {
     public:
         static Chapter& getChapter();
@@ -21,8 +23,8 @@ static class Game
     private:
         Game();
 
-        static player Player;
-        static actualChapter Chapter;
+        static Player player;
+        static Chapter actualChapter;
 };
 
 #endif // GAME_H
