@@ -3,17 +3,25 @@
 
 #include <item.h>
 
-
 class Consumable : public Item
 {
     public:
-        Consumable();
+        int getType();
+        int getCharges();
+        bool isEmpty();
+        void use();
 
     protected:
 
     private:
         ConsumableType type;
         int charges;
+};
+
+enum ConsumableType{
+    Strength,
+    Intelligence,
+    Persuasion
 };
 
 #endif // CONSUMABLE_H
