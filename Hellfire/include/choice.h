@@ -25,4 +25,11 @@ class Choice
         int corruption;
 };
 
+enum ChoiceType {
+    Strength,
+    Intelligence,
+    Persuasion,
+    Default
+};
+
 #endif // CHOICE_H
