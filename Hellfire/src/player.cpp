@@ -7,7 +7,7 @@ Attributes& Player::getAttributes() {
 
 }
 
-string Player::getName(){
+std::string Player::getName(){
 
 }
 
@@ -19,7 +19,7 @@ int Player::getSkillPoints(){
 
 }
 
-void Player::setName(string name) {
+void Player::setName(std::string name) {
 
 }
 

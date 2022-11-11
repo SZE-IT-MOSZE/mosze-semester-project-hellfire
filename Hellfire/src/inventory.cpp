@@ -1,18 +1,18 @@
 #include "inventory.h"
 
 
-void Inventory::addItem(Item item) {
+void Inventory::addItem(Item& item) {
 
 }
 
-void Inventory::deleteItem(string name){
+void Inventory::deleteItem(std::string name){
 
 }
 
-vector<Item>& Inventory::getItems(){
-
+std::vector<Item>& Inventory::getItems(){
+    return items;
 }
 
-Item& Inventory::selectedItem(string name) {
-
+Item& Inventory::selectedItem(std::string name) {
+    //return &selectedItem;
 }

@@ -6,43 +6,43 @@ Game::Game(){
 
 }
 
-static Chapter& Game::getChapter(){
+Chapter& Game::getChapter(){
 
 }
 
-static Chapter Game::loadNextChapter(){
+Chapter Game::loadNextChapter(){
 
 }
 
-static Player& Game::getPlayer(){
+Player& Game::getPlayer(){
 
 }
 
-static void Game::loadGame(string name){
+void Game::loadGame(string name){
 
 }
 
-static void Game::saveHame(string name){
+void Game::saveHame(string name){
 
 }
 
-static void Game::openInventory(){
+void Game::openInventory(){
 
 }
 
-static void Game::openAttribueWindow(){
+void Game::openAttribueWindow(){
 
 }
 
-static void Game::openMenu{
+void Game::openMenu() {
 
 }
 
-static void Game::newGame(){
-
+void Game::newGame(){
+    std::cout << "New game test" << std::endl;
 }
 
-static void Game::turn(){
+void Game::turn(){
 
 }
 

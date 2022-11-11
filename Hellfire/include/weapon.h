@@ -1,7 +1,11 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include <item.h>
+#include "item.h"
+
+enum WeaponType {
+    Staff, Sword
+};
 
 class Weapon : public Item
 {
@@ -18,8 +22,5 @@ class Weapon : public Item
         bool equipped;
 };
 
-enum WeaponType {
-    Staff, Sword
-};
 
 #endif // WEAPON_H

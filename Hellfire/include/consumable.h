@@ -1,7 +1,13 @@
 #ifndef CONSUMABLE_H
 #define CONSUMABLE_H
 
-#include <item.h>
+#include "item.h"
+
+enum ConsumableType{
+    Strength,
+    Intelligence,
+    Persuasion
+};
 
 class Consumable : public Item
 {
@@ -16,12 +22,6 @@ class Consumable : public Item
     private:
         ConsumableType type;
         int charges;
-};
-
-enum ConsumableType{
-    Strength,
-    Intelligence,
-    Persuasion
 };
 
 #endif // CONSUMABLE_H

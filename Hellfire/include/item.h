@@ -1,11 +1,11 @@
 #ifndef ITEM_H
 #define ITEM_H
-
+#include <iostream>
 
 class Item
 {
     public:
-        string getName();
+        std::string getName();
         int getEffectiveness();
         virtual int getType() = 0;
 
@@ -13,7 +13,7 @@ class Item
 
     private:
         int effectiveness;
-        string name;
+        std::string name;
 };
 
 #endif // ITEM_H

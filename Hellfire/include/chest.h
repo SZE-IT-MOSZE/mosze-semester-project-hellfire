@@ -6,11 +6,11 @@
 class Chest
 {
     public:
-        Item Open();
+        Item& Open();
     protected:
 
     private:
-        Item item;
+        Item& item;
 };
 
 #endif // CHEST_H

@@ -2,6 +2,8 @@
 #define SCENE_H
 
 #include "choice.h"
+#include <iostream>
+#include <vector>
 
 class Scene
 {
@@ -11,8 +13,8 @@ class Scene
     protected:
 
     private:
-        string art;
-        vector<Choice> choices;
+        std::string art;
+        std::vector<Choice> choices;
 };
 
 #endif // SCENE_H

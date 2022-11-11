@@ -2,7 +2,7 @@
 #define CHAPTER_H
 
 #include "Chest.h"
-#include "Scene.h"
+#include "scene.h"
 
 class Chapter
 {
@@ -15,8 +15,8 @@ class Chapter
     protected:
 
     private:
-        bool isFinished;
-        vector<Scene> scenes
+        bool finished;
+        std::vector<Scene> scenes;
         int actSceneIndex;
         Chest chest;
 };

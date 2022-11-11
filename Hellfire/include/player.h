@@ -9,10 +9,10 @@ class Player
     public:
         Inventory& getInventory();
         Attributes& getAttributes();
-        string getName();
+        std::string getName();
         void setSkillPoints(int n);
         int getSkillPoints();
-        void setName(string name);
+        void setName(std::string name);
         void setExperience(int amount);
 
     protected:
@@ -21,9 +21,9 @@ class Player
         Inventory inventory;
         int availableSkillPoints;
         Attributes attributes;
-        string name;
+        std::string name;
         int experience;
-        Item equippedItem;
+        Item& equippedItem;
 };
 
 #endif // PLAYER_H

@@ -10,8 +10,8 @@ class Game
         static Chapter& getChapter();
         static Chapter loadNextChapter();
         static Player& getPlayer();
-        static void loadGame(string name);
-        static void saveHame(string name);
+        static void loadGame(std::string name);
+        static void saveHame(std::string name);
         static void openInventory();
         static void openAttribueWindow();
         static void openMenu();
