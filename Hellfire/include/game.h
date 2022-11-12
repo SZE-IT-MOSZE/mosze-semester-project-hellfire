@@ -17,14 +17,14 @@ class Game
         static void openMenu();
         static void newGame();
         static void turn();
-
     protected:
 
     private:
         Game();
-
+        static const char* STORY_PATH;
         static Player player;
         static Chapter actualChapter;
+
 };
 
 #endif // GAME_H
