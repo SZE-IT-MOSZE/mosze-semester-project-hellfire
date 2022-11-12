@@ -9,16 +9,20 @@ class Chapter
     public:
         bool isFinished();
         void drawScene();
-        void nextScene();
-
-
+        Scene* nextScene();
+        std::string getTitle();
+        int getOrder();
+        Chapter(int odr, std::string ttl, std::vector<Scene>& scns);
+        Chapter& operator=(Chapter& ch);
     protected:
 
     private:
         bool finished;
-        std::vector<Scene> scenes;
+        int order;
+        std::string title;
+        std::vector<Scene>& scenes;
         int actSceneIndex;
-        Chest chest;
+       // Chest chest;
 };
 
 #endif // CHAPTER_H
