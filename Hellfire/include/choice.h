@@ -1,13 +1,7 @@
 #ifndef CHOICE_H
 #define CHOICE_H
 #include <iostream>
-
-enum ChoiceType {
-    Strength,
-    Intelligence,
-    Persuasion,
-    Default
-};
+#include "enums.h"
 
 class Choice
 {
@@ -19,6 +13,7 @@ class Choice
         int getDifficulty();
         int getExperience();
         int getCorruption();
+        Choice(int dif, int cor, std::string txt, int exp, int tp, int stp);
 
     protected:
 
@@ -30,6 +25,7 @@ class Choice
         bool chosen;
         int experience;
         int corruption;
+        int step;
 };
 
 #endif // CHOICE_H
