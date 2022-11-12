@@ -2,10 +2,7 @@
 #define WEAPON_H
 
 #include "item.h"
-
-enum WeaponType {
-    Staff, Sword
-};
+#include "enums.h"
 
 class Weapon : public Item
 {

@@ -2,12 +2,8 @@
 #define CONSUMABLE_H
 
 #include "item.h"
+#include "enums.h"
 
-enum ConsumableType{
-    Strength,
-    Intelligence,
-    Persuasion
-};
 
 class Consumable : public Item
 {
