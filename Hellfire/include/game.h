@@ -17,7 +17,7 @@ class Game
         static void saveHame(std::string name);
         static void openInventory();
         static void openAttribueWindow();
-        static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont);
+        static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState);
         static void newGame();
         static void turn();
         static const char* GAME_TITLE;
