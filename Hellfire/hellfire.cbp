@@ -16,7 +16,7 @@
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
-					<Add directory="include" />
+					<Add directory="lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -34,7 +34,12 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="include" />
 		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf" />
+			<Add directory="lib" />
+		</Linker>
 		<Unit filename="include/chapter.h" />
 		<Unit filename="include/choice.h" />
 		<Unit filename="include/consumable.h" />
