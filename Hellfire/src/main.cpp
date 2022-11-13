@@ -18,7 +18,14 @@ int main(int argc, char *argv[]) {
     TTF_Font *font = TTF_OpenFont("assets/arial.ttf", 30);
     TTF_Font *titleFont = TTF_OpenFont("assets/hobbiton.ttf", 50);
 
-    int i = Game::openMenu(windowSurface, font, titleFont);
+    int result = 0;
+    while(true) {
+        result = Game::openMenu(windowSurface, font, titleFont, result);
+        std::cout << result << std::endl;
+        if(result == 2) {
+            break;
+        }
+    }
 /*
 std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
 std::cout << "Chapter order: " << Game::getChapter().getOrder() << std::endl;
