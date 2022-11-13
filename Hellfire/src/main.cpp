@@ -4,8 +4,6 @@
 
 
 int main(int argc, char *argv[]) {
-    Game::newGame();
-
     SDL_Surface* windowSurface = SDL_GetWindowSurface(Render::window);
     SDL_Surface* imageSurface = SDL_LoadBMP("assets/Mordor1.bmp");
 
@@ -21,28 +19,32 @@ int main(int argc, char *argv[]) {
     int result = 0;
     while(true) {
         result = Game::openMenu(windowSurface, font, titleFont, result);
-        std::cout << result << std::endl;
         if(result == 2) {
             break;
         }
-    }
-/*
-std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
-std::cout << "Chapter order: " << Game::getChapter().getOrder() << std::endl;
-for (Scene* scene = Game::getChapter().nextScene(); scene != NULL; scene = Game::getChapter().nextScene()) {
-                 std::cout << "-------------------------------" << std::endl;
-                 std::cout << "Scene order number: " << scene->getOrder() << std::endl;
-                 std::cout << "Art path: " << scene->getArt() << std::endl;
-                 std::cout << "Storybit: " << scene->getStorybit() << std::endl;
-                 std::cout << "Choices: " << std::endl;
-                 for (auto & choice : scene->getChoices()) {
-                    std::cout << "\tChoice difficulty: " << choice.getDifficulty() << std::endl;
-                    std::cout << "\tChoice experience: " << choice.getExperience() << std::endl;
-                    std::cout << "\tChoice corruption: " << choice.getCorruption() << std::endl;
-                    std::cout << "\tChoice text: " << choice.getText() << std::endl << std::endl;
+        else if(result == 0) {
+           if(Game::getChapter().getOrder() == -1) {
+               Game::newGame();
+               std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
+               std::cout << "Chapter order: " << Game::getChapter().getOrder() << std::endl;
+               for (Scene* scene = Game::getChapter().nextScene(); scene != NULL; scene = Game::getChapter().nextScene()) {
+                     std::cout << "-------------------------------" << std::endl;
+                     std::cout << "Scene order number: " << scene->getOrder() << std::endl;
+                     std::cout << "Art path: " << scene->getArt() << std::endl;
+                     std::cout << "Storybit: " << scene->getStorybit() << std::endl;
+                     std::cout << "Choices: " << std::endl;
+                     for (auto & choice : scene->getChoices()) {
+                        std::cout << "\tChoice difficulty: " << choice.getDifficulty() << std::endl;
+                        std::cout << "\tChoice experience: " << choice.getExperience() << std::endl;
+                        std::cout << "\tChoice corruption: " << choice.getCorruption() << std::endl;
+                        std::cout << "\tChoice text: " << choice.getText() << std::endl << std::endl;
+                    }
+                     std::cout << "-------------------------------" << std::endl;
                 }
-                 std::cout << "-------------------------------" << std::endl;
-    } */
+           }
+        }
+    }
+
 
     SDL_FreeSurface(windowSurface);
     SDL_DestroyWindow(Render::window);
