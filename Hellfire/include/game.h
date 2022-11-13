@@ -4,6 +4,9 @@
 #include "Chapter.h"
 #include "Player.h"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 class Game
 {
     public:
@@ -14,9 +17,10 @@ class Game
         static void saveHame(std::string name);
         static void openInventory();
         static void openAttribueWindow();
-        static void openMenu();
+        static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont);
         static void newGame();
         static void turn();
+        static const char* GAME_TITLE;
     protected:
 
     private:
