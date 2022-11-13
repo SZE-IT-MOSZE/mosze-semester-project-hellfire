@@ -1,10 +1,25 @@
 #include <iostream>
 #include "game.h"
+#include "render.h"
 
-int main() {
 
-Game::newGame();
+int main(int argc, char *argv[]) {
+    Game::newGame();
 
+    SDL_Surface* windowSurface = SDL_GetWindowSurface(Render::window);
+    SDL_Surface* imageSurface = SDL_LoadBMP("assets/Mordor1.bmp");
+
+    SDL_Rect pos_img = {  0,
+                0,
+                 imageSurface->w, imageSurface->h};
+
+    Render::renderSurface(imageSurface, pos_img);
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont("assets/arial.ttf", 30);
+    TTF_Font *titleFont = TTF_OpenFont("assets/hobbiton.ttf", 50);
+
+    int i = Game::openMenu(windowSurface, font, titleFont);
+/*
 std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
 std::cout << "Chapter order: " << Game::getChapter().getOrder() << std::endl;
 for (Scene* scene = Game::getChapter().nextScene(); scene != NULL; scene = Game::getChapter().nextScene()) {
@@ -20,5 +35,14 @@ for (Scene* scene = Game::getChapter().nextScene(); scene != NULL; scene = Game:
                     std::cout << "\tChoice text: " << choice.getText() << std::endl << std::endl;
                 }
                  std::cout << "-------------------------------" << std::endl;
-    }
+    } */
+
+    SDL_FreeSurface(windowSurface);
+    SDL_DestroyWindow(Render::window);
+    SDL_DestroyRenderer( Render::renderer );
+    SDL_Quit();
+    TTF_CloseFont(font);
+    TTF_CloseFont(titleFont);
+    TTF_Quit();
+    return EXIT_SUCCESS;
 }
