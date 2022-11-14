@@ -1,6 +1,5 @@
 *.layout
 *.depend
-bin/
 obj/
 *.png
 build/
