@@ -2,7 +2,6 @@
 #include "game.h"
 #include "render.h"
 
-
 int main(int argc, char *argv[]) {
     SDL_Surface* windowSurface = SDL_GetWindowSurface(Render::window);
     SDL_Surface* imageSurface = SDL_LoadBMP("assets/Mordor1.bmp");

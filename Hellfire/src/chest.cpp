@@ -1,5 +1,5 @@
 #include "chest.h"
 
-Item Chest::Open() {
+Item& Chest::Open() {
 
 }

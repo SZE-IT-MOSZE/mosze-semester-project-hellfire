@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "game.h"
 #include "tinyxml2.h"
 #include <vector>
 #include "choice.h"
