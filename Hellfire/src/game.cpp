@@ -5,16 +5,16 @@
 #include "scene.h"
 #include "render.h"
 #include "interaction.h"
+#include "weapon.h"
 
 using namespace tinyxml2;
 
 const char* Game::STORY_PATH = "story/story.xml";
 const char* Game::GAME_TITLE = "Fantasy Game";
 
-std::string init = "";
-std::vector<Scene> initScns = {};
-Chapter Game::actualChapter = Chapter(-1, init, initScns);
-
+Chapter Game::actualChapter = Chapter();
+Weapon init = Weapon();
+Player player = Player(init);
 
 
 Game::Game(){ }
