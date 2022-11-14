@@ -2,6 +2,11 @@
 
 using namespace std;
 
+Chapter::Chapter() : scenes(vector<Scene>() = {}) {
+    order = -1;
+    title = "";
+}
+
 Chapter::Chapter(int odr, std::string ttl, std::vector<Scene>& scns) : scenes(scns) {
     order = odr;
     title = ttl;

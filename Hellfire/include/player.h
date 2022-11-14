@@ -3,6 +3,7 @@
 
 #include "inventory.h"
 #include "attributes.h"
+#include "weapon.h"
 
 class Player
 {
@@ -14,7 +15,7 @@ class Player
         int getSkillPoints();
         void setName(std::string name);
         void setExperience(int amount);
-
+        Player(Weapon init);
     protected:
 
     private:
