@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
     int result = 0;
     while(true) {
         result = Game::openMenu(windowSurface, font, titleFont, result);
-        if(result == 2) {
+        if(result == MenuOptions::EXIT_GAME) {
             break;
         }
-        else if(result == 0) {
+        else if(result == MenuOptions::NEW_GAME) {
            if(Game::getChapter().getOrder() == -1) {
                Game::newGame();
                std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
