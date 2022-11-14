@@ -19,7 +19,7 @@ class Game
         static void openAttribueWindow();
         static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState);
         static void newGame();
-        static void turn();
+        static void turn(TTF_Font* titleFont);
         static const char* GAME_TITLE;
     protected:
 

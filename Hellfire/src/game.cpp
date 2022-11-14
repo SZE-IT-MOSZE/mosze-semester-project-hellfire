@@ -57,9 +57,9 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
     bool selected[NUMMENU] = {0,0,0};
     selected[previousState] = true;
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
-
+    SDL_RenderClear(Render::renderer);
     SDL_SetRenderDrawColor( Render::renderer, 0, 0, 0, 255 );
-
+    SDL_Surface* background = SDL_LoadBMP("assets/Mordor1.bmp");
     SDL_Surface* title = TTF_RenderUTF8_Solid(titleFont, GAME_TITLE, color[0]);
 
     for(int i = 0; i < NUMMENU; i++) {
@@ -85,6 +85,12 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
      SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
                                    Render::HEIGHT / 4 - title->clip_rect.h,
                                    title->w, title->h};
+
+     SDL_Rect pos_img = {  0,
+                0,
+                 background->w, background->h};
+
+     Render::renderSurface(background, pos_img);
 
      Render::renderSurface(title, titlePos);
      Render::renderSurface(menus[0], pos[0]);
@@ -191,8 +197,30 @@ void Game::newGame(){
         }
     }
 }
-void Game::turn(){
+void Game::turn(TTF_Font* titleFont){
+    SDL_RenderClear(Render::renderer);
+    SDL_Color color[2] = {{255,255,255}, {255,0,0}};
 
+    SDL_Surface* title = TTF_RenderUTF8_Solid(titleFont, Game::getChapter().getTitle().c_str(), color[0]);
+
+    SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                   Render::HEIGHT / 4 - title->clip_rect.h,
+                                   title->w, title->h};
+
+    Render::renderSurface(title, titlePos);
+
+
+    Interaction listener;
+    int result = listener.listen([](SDL_Event& event) -> int {
+            switch(event.type) {
+                case SDL_QUIT:
+                    return -1;
+                case SDL_KEYDOWN:
+                   if(SDLK_ESCAPE == event.key.keysym.sym) {
+                         return 0;
+                   }
+            }
+        });
 }
 
 

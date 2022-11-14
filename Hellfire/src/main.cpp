@@ -4,13 +4,7 @@
 
 int main(int argc, char *argv[]) {
     SDL_Surface* windowSurface = SDL_GetWindowSurface(Render::window);
-    SDL_Surface* imageSurface = SDL_LoadBMP("assets/Mordor1.bmp");
 
-    SDL_Rect pos_img = {  0,
-                0,
-                 imageSurface->w, imageSurface->h};
-
-    Render::renderSurface(imageSurface, pos_img);
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("assets/arial.ttf", 30);
     TTF_Font *titleFont = TTF_OpenFont("assets/hobbiton.ttf", 50);
@@ -41,6 +35,7 @@ int main(int argc, char *argv[]) {
                      std::cout << "-------------------------------" << std::endl;
                 } */
            }
+           Game::turn(font);
         }
     }
 
