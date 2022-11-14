@@ -22,9 +22,9 @@ int main(int argc, char *argv[]) {
             break;
         }
         else if(result == MenuOptions::NEW_GAME) {
-           if(Game::getChapter().getOrder() == -1) {
-               Game::newGame();
-               std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
+          if(Game::getChapter().getOrder() == -1) {
+            Game::newGame();
+              /* std::cout << "Chapter title: " << Game::getChapter().getTitle() << std::endl;
                std::cout << "Chapter order: " << Game::getChapter().getOrder() << std::endl;
                for (Scene* scene = Game::getChapter().nextScene(); scene != NULL; scene = Game::getChapter().nextScene()) {
                      std::cout << "-------------------------------" << std::endl;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
                         std::cout << "\tChoice text: " << choice.getText() << std::endl << std::endl;
                     }
                      std::cout << "-------------------------------" << std::endl;
-                }
+                } */
            }
         }
     }
