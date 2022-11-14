@@ -12,7 +12,8 @@ using namespace tinyxml2;
 const char* Game::STORY_PATH = "story/story.xml";
 const char* Game::GAME_TITLE = "Fantasy Game";
 
-Chapter Game::actualChapter = Chapter();
+std::vector<Scene> initScns = {};
+Chapter Game::actualChapter = Chapter(initScns);
 Weapon init = Weapon();
 Player player = Player(init);
 

@@ -13,7 +13,7 @@ class Chapter
         std::string getTitle();
         int getOrder();
         Chapter(int odr, std::string ttl, std::vector<Scene>& scns);
-        Chapter();
+        Chapter(std::vector<Scene>& scns);
         Chapter& operator=(Chapter& ch);
     protected:
 

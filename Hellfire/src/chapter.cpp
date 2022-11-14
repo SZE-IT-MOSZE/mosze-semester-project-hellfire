@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Chapter::Chapter() : scenes(vector<Scene>() = {}) {
+Chapter::Chapter(std::vector<Scene>& scns) : scenes(scns) {
     order = -1;
     title = "";
 }
@@ -12,10 +12,9 @@ Chapter::Chapter(int odr, std::string ttl, std::vector<Scene>& scns) : scenes(sc
     title = ttl;
 }
 
-Chapter& Chapter::operator=(Chapter& ch) {
+Chapter& Chapter::operator=(Chapter& ch)  {
     title = ch.title;
     order = ch.order;
-    scenes = vector<Scene>(ch.scenes);
     actSceneIndex = 0;
 
     return *this;
