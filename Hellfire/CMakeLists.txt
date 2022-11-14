@@ -28,4 +28,4 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/SDL2.dll
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/SDL2_ttf.dll
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -mwindows)
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf)
