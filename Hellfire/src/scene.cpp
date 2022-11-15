@@ -1,7 +1,7 @@
 #include "scene.h"
 
 
-Scene::Scene(std::string sb, std::string a,  std::string odr, std::vector<Choice> chs): choices(chs) {
+Scene::Scene(std::string sb, std::string a,  std::string odr, std::vector<Choice*> chs) : choices(chs) {
     storybit = sb;
     art = a;
     order = odr;
@@ -23,6 +23,14 @@ std::string Scene::getOrder() {
     return order;
 }
 
-std::vector<Choice>& Scene::getChoices() {
+std::vector<Choice*>& Scene::getChoices() {
     return choices;
+}
+
+Scene::~Scene() {
+   for (auto p : choices)
+   {
+      delete p;
+   }
+   choices.clear();
 }

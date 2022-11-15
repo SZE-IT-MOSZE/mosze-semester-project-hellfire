@@ -9,19 +9,22 @@ class Chapter
     public:
         bool isFinished();
         void drawScene();
-        Scene* nextScene();
+        void nextScene();
         std::string getTitle();
         int getOrder();
-        Chapter(int odr, std::string ttl, std::vector<Scene>& scns);
-        Chapter(std::vector<Scene>& scns);
-        Chapter& operator=(Chapter& ch);
+        int getSceneIndex();
+        int getSceneCount();
+        Scene* getActScene();
+        Chapter(int odr, std::string ttl, std::vector<Scene*> scns);
+        Chapter(std::vector<Scene*> scns);
+        ~Chapter();
     protected:
 
     private:
         bool finished;
         int order;
         std::string title;
-        std::vector<Scene>& scenes;
+        std::vector<Scene*> scenes;
         int actSceneIndex;
        // Chest chest;
 };
