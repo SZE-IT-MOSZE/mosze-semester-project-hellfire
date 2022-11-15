@@ -22,3 +22,8 @@ Render::Render() {
                 std::cout << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
     }
 };
+
+Render::~Render() {
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer );
+}

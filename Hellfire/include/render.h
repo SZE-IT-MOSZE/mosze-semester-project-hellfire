@@ -16,6 +16,7 @@ class Render
 
     private:
         Render();
+        ~Render();
 };
 
 #endif
