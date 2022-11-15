@@ -56,20 +56,20 @@
             <art>assets/Mordor3.png</art>
             <storybit>NPC_1: A hercegnek esetleg szüksége van némi segítségre?</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Bármilyen segítség jól jön</option>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.2">Nem, köszönöm... mostmár indulnom kell</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Bármilyen segítség jól jön</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="2">Nem, köszönöm... mostmár indulnom kell</option>
             </options>
         </scene>
         
-        <scene order="7.1">
+        <scene order="8">
             <art>assets/Mordor3.png</art>
             <storybit>NPC_1: Rádbízom ezt a mágikus kristályt, mely képes a legnagyobb sötétségben is erőt adni... egy volt bajtársamé volt, aki társát mentette élete árán, szolgáljon téged azokon a sötét hegyeken túl.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="-1" step="0.9">Nagyon köszönöm, ennek jó haszná fogom venni.</option>
+                <option diff="0" attr="def" exp="10" cpn="-1" step="2">Nagyon köszönöm, ennek jó haszná fogom venni.</option>
             </options>
         </scene>
         
-        <scene order="7.2">
+        <scene order="9">
             <art>assets/Mordor3.png</art>
             <storybit>NPC_1: Rendben, ez esetben szerencsés utat!</storybit>
             <options>
@@ -77,57 +77,57 @@
             </options>
         </scene>
         
-        <scene order="8">
+        <scene order="10">
             <art>assets/Mordor3.png</art>
             <storybit>A herceg átlépi a fekete föld kapuját és megérkezik Udún völgyébe. Eme tájon kezdődött a háború a Sötét Úrral! Már a kapun átlépve érezte, hogy nehezebb lesz a légzése, és egy kisebb nyomás is felütötte a mellkasát. Az úton haladva találkozik egy ifjú legénnyel, aki a közeli faluhoz vitte volna a lelőtt vadat. A fiú láthatóan küszködött a nehéz zsákmány cipelés.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Help</option>
-                <option diff="0" attr="def" exp="10" cpn="0" step="1">Ignore</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Help</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="2">Ignore</option>
             </options>
         </scene>
         
-        <scene order="8.1">
+        <scene order="11">
             <art>assets/Mordor3.png</art>
             <storybit>Player: Látom el kell neked egy segítő kéz. NPC_2: Ugyan, semmi szükség rá! Különben is, ezt egyedül kell megcsinálnom.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Miért kellene egyedül cipelned? </option>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.9">Akkor kitartást!</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Miért kellene egyedül cipelned? </option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="5">Akkor kitartást!</option>
             </options>
         </scene>
         
-        <scene order="8.2">
+        <scene order="12">
             <art>assets/Mordor3.png</art>
             <storybit>NPC_2: Ez a falu népét szolgálja, ezeken a földeken nehezen megy az élet, nem tudtam tovább várni a vadászunkra így magam jöttem el egyedül.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Tudomásom szerint a vadászat csapatmunka és nagyon veszélyes ezt egyedül csinálni ilyen területen, ugyan a falu még odébb van, had segítsek egy kicsit.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Tudomásom szerint a vadászat csapatmunka és nagyon veszélyes ezt egyedül csinálni ilyen területen, ugyan a falu még odébb van, had segítsek egy kicsit.</option>
             </options>
         </scene>
         
-        <scene order="8.3">
+        <scene order="13">
             <art>assets/Mordor3.png</art>
             <storybit>NPC_2: Attól tartok igazad lehet... rendben... legyen úgy, segíts nekem cipelni egy darabon, mikor szólok onnantól átveszem.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Tovább</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Tovább</option>
             </options>
         </scene>
         
-        <scene order="8.4">
+        <scene order="14">
             <art>.../image1.jpg</art>
             <storybit>NPC_2: Rendben, innentől má magam viszem be, köszönöm a segítséget!</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="0.1">Remélem megjegyezted a szavaim és innentől mindig lesz veled valaki mikor egy komoly vadászatra indulsz.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Remélem megjegyezted a szavaim és innentől mindig lesz veled valaki mikor egy komoly vadászatra indulsz.</option>
             </options>
         </scene>
         
-        <scene order="8.5">
+        <scene order="15">
             <art>assets/Mordor3.png</art>
             <storybit>NPC_2: Úgy lesz, ezt pedig a fáradozásodért.</storybit>
             <options>
-                <option diff="0" attr="def" exp="150" cpn="0" step="0.5">Tovább (150 xp)</option>
+                <option diff="0" attr="def" exp="150" cpn="0" step="1">Tovább (150 xp)</option>
             </options>
         </scene>
         
-        <scene order="9">
+        <scene order="16">
             <art>assets/Mordor3.png</art>
             <storybit>A herceg folytatta útját és a távolból már megpillantotta Udún völgyének végét. Egy őrizetlen torony állt vele szemben melyet megközelítve érezte, hogy valami belemar a szívébe. Egyszer csak egy ork rontott ki a torony ajtaján:
             </storybit>
@@ -136,7 +136,7 @@
             </options>
         </scene>
         
-        <scene order="10">
+        <scene order="17">
             <art>assets/Mordor3.png</art>
             <storybit>A herceget kissé váratlanul érte a támadás, de harci képességei még a korral sem koptak semmit. A tornyon túl várta őt Mordor legsötétebb helye, Gorgoroth kopár fennsíkja.</storybit>
             <options>
