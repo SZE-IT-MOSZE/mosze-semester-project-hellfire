@@ -17,9 +17,7 @@ int main(int argc, char *argv[]) {
             break;
         }
         else if(result == MenuOptions::NEW_GAME) {
-          if(Game::getChapter() == nullptr) {
             Game::newGame();
-           }
 
            while(true) {
                if(Game::turn(font, storyFont) == 0) {
