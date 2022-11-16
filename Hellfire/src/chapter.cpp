@@ -56,9 +56,9 @@ Chapter::~Chapter() {
    scenes.clear();
 }
 
-void Chapter::nextScene() {
+void Chapter::nextScene(int step) {
     if(actSceneIndex < scenes.size()) {
-       actSceneIndex++;
+       actSceneIndex += step;
     }
 }
 

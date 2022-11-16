@@ -9,7 +9,7 @@ class Chapter
     public:
         bool isFinished();
         void drawScene();
-        void nextScene();
+        void nextScene(int step);
         std::string getTitle();
         int getOrder();
         int getSceneIndex();
