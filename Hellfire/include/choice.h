@@ -13,6 +13,7 @@ class Choice
         int getDifficulty();
         int getExperience();
         int getCorruption();
+        int getStep();
         Choice(int dif, int cor, std::string txt, int exp, int tp, int stp);
 
     protected:
