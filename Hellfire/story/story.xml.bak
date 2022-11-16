@@ -99,7 +99,7 @@
             <art>assets/Mordor3.bmp</art>
             <storybit>NPC_2: Ez a falu népét szolgálja, ezeken a földeken nehezen megy az élet, nem tudtam tovább várni a vadászunkra így magam jöttem el egyedül.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="1">Ezt egyedül csinálni ilyen területen, ugyan a falu még odébb van, had segítsek egy kicsit.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Ezt veszélyes egyedül csinálni ilyen területen, ugyan a falu még odébb van, had segítsek egy kicsit.</option>
             </options>
         </scene>
         

@@ -79,7 +79,7 @@
         
         <scene order="10">
             <art>assets/Mordor3.bmp</art>
-            <storybit>A herceg átlépi a fekete föld kapuját és megérkezik Udún völgyébe. Eme tájon kezdődött a háború a Sötét Úrral! Már a kapun átlépve érezte, hogy nehezebb lesz a légzése, és egy kisebb nyomás is felütötte a mellkasát. Az úton haladva találkozik egy ifjú legénnyel, aki a közeli faluhoz vitte volna a lelőtt vadat. A fiú láthatóan küszködött a nehéz zsákmány cipelés.</storybit>
+            <storybit>A herceg átlépi a fekete föld kapuját és megérkezik Udún völgyébe. Eme tájon kezdődött a háború a Sötét Úrral! Már a kapun átlépve érezte, hogy nehezebb lesz a légzése, és egy kisebb nyomás is felütötte a mellkasát. Az úton haladva találkozik egy ifjú legénnyel, aki a közeli faluhoz vitte volna a lelőtt vadat. A fiú láthatóan küszködött a nehéz zsákmány cipelésével.</storybit>
             <options>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Látom el kell neked egy segítő kéz. (Help)</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="6">Ignore</option>
