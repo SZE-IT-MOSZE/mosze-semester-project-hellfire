@@ -1,19 +1,23 @@
 #include "player.h"
 
-Player::Player(Weapon init) : equippedItem(init) {
+Player::Player()  {
     name = "";
     availableSkillPoints = 0;
     experience = 0;
-    attributes = Attributes();
-    inventory = Inventory();
+    //attributes = Attributes();
+   // inventory = Inventory();
 }
 
-Inventory& Player::getInventory(){
+int Player::getExperience() {
+    return experience;
+}
+
+/*Inventory& Player::getInventory(){
     return inventory;
 }
 Attributes& Player::getAttributes() {
     return attributes;
-}
+} */
 
 std::string Player::getName(){
     return name;

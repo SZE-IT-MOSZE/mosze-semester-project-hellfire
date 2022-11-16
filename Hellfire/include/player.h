@@ -8,23 +8,24 @@
 class Player
 {
     public:
-        Inventory& getInventory();
-        Attributes& getAttributes();
+       // Inventory& getInventory();
+      //  Attributes& getAttributes();
         std::string getName();
         void setSkillPoints(int n);
         int getSkillPoints();
         void setName(std::string name);
         void setExperience(int amount);
-        Player(Weapon init);
+        int getExperience();
+        Player();
     protected:
 
     private:
-        Inventory inventory;
+        //Inventory inventory;
         int availableSkillPoints;
-        Attributes attributes;
+        //Attributes attributes;
         std::string name;
         int experience;
-        Item& equippedItem;
+       // Item& equippedItem;
 };
 
 #endif // PLAYER_H
