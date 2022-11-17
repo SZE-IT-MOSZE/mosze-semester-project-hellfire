@@ -13,8 +13,7 @@ const char* Game::STORY_PATH = "story/story.xml";
 const char* Game::GAME_TITLE = "Fantasy Game";
 
 Chapter* Game::actualChapter = nullptr;
-Weapon init = Weapon();
-Player player = Player(init);
+Player* Game::player = nullptr;
 
 
 Game::Game(){ }
@@ -27,8 +26,8 @@ Chapter Game::loadNextChapter(){
 
 }
 
-Player& Game::getPlayer(){
-
+Player* Game::getPlayer(){
+    return player;
 }
 
 void Game::loadGame(std::string name){
@@ -194,6 +193,7 @@ void Game::newGame(){
                     scenes.push_back(new Scene(storybit, art, order, choices));
             }
            actualChapter = new Chapter(cOrder, title, scenes);
+           player = new Player();
         }
     }
 }
@@ -204,7 +204,11 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont){
 
         else {
             SDL_RenderClear(Render::renderer);
-            SDL_Surface* background = SDL_LoadBMP("assets/Mordor3.bmp");
+
+            Scene* actScene = actualChapter->getActScene();
+            std::vector<Choice*>& choices =  actScene->getChoices();
+
+            SDL_Surface* background = SDL_LoadBMP(actScene->getArt().c_str());
 
            SDL_Rect pos_img = {  0,
             0,
@@ -233,10 +237,6 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont){
 
             Render::renderSurface(story, storyPos);
 
-            std::vector<Choice*>& choices =  actualChapter->getActScene()->getChoices();
-            for(auto choice : choices) {
-                std::cout << choice->getText() << std::endl;
-            }
             const char* labels[choices.size()];
             SDL_Surface* choiceMenu[choices.size()];
             bool selected[choices.size()];
@@ -273,7 +273,8 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont){
                            else if(SDL_SCANCODE_RETURN == event.key.keysym.scancode) {
                                  for(int i = 0; i < choices.size(); i++) {
                                     if(selected[i] == true) {
-                                        actualChapter->nextScene();
+                                        actScene->chooseChoice(choices[i]);
+                                        actualChapter->nextScene(choices[i]->getStep());
                                         return i + 1;
                                     }
                                 }
@@ -335,41 +336,12 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont){
                     }
                 }
              }
-            // Interaction listener;
-           /* int result = listener.listen([&selected, &choices, &choiceMenu, &storyFont, &labels, &color, &choiceMenuPos](SDL_Event& event) -> int {
-                    switch(event.type) {
-                        case SDL_QUIT:
-                            return -1;
-                        case SDL_KEYDOWN:
-                           if(SDLK_ESCAPE == event.key.keysym.sym) {
-                                 return 0;
-                           }
-
-                           else if(SDL_SCANCODE_RETURN == event.key.keysym.scancode) {
-                                 for(int i = 0; i < choices.size(); i++) {
-                                    if(selected[i] == true) {
-                                        actualChapter->nextScene();
-                                        return i + 1;
-                                    }
-                                }
-                           }
-
-                           else if(SDLK_UP == event.key.keysym.sym) {
-
-                           }
-
-                            else if(SDLK_DOWN == event.key.keysym.sym) {
-
-                           }
-
-                    }
-                });
-                return result; */
-            }
+        }
 }
 
 Game::~Game() {
     delete actualChapter;
+    delete player;
 }
 
 

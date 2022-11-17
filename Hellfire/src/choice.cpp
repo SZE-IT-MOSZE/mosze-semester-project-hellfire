@@ -15,6 +15,10 @@ std::string Choice::getText(){
     return text;
 }
 
+int Choice::getStep() {
+    return step;
+}
+
 int Choice::getType() {
     return static_cast<int>(type);
 }

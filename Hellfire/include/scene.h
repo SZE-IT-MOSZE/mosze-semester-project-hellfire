@@ -8,7 +8,7 @@
 class Scene
 {
     public:
-        void chooseChoice();
+        void chooseChoice(Choice* chosenChoice);
         Scene(std::string sb, std::string a,  std::string order, std::vector<Choice*> chs);
         std::string getArt();
         std::string getStorybit();
