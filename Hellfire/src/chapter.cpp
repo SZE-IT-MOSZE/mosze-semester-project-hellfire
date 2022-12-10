@@ -9,15 +9,6 @@ Chapter::Chapter(int odr, std::string ttl, std::vector<Scene*> scns) : scenes(sc
     actSceneIndex = 0;
 }
 
-/*Chapter& Chapter::operator=(Chapter& ch)  {
-    title = ch.title;
-    order = ch.order;
-    scenes = ch.scenes;
-    actSceneIndex = 0;
-
-    return *this;
-} */
-
 int Chapter::getOrder() {
     return order;
 }
