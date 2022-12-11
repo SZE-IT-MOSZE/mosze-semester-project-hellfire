@@ -21,10 +21,6 @@ std::string Chapter::getTitle() {
     return title;
 }
 
-bool Chapter::isFinished(){
-
-}
-
 void Chapter::drawScene() {
 
 }
@@ -37,6 +33,7 @@ Scene* Chapter::getActScene() {
     if(actSceneIndex < scenes.size()) {
         return scenes[actSceneIndex];
      }
+     return nullptr;
 }
 
 Chapter::~Chapter() {

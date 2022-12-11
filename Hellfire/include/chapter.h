@@ -7,7 +7,6 @@
 class Chapter
 {
     public:
-        bool isFinished();
         void drawScene();
         void nextScene(int step);
         std::string getTitle();
@@ -21,7 +20,6 @@ class Chapter
     protected:
 
     private:
-        bool finished;
         int order;
         std::string title;
         std::vector<Scene*> scenes;
