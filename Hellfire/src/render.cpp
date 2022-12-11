@@ -1,5 +1,5 @@
 #include "render.h"
-#include "game.h";
+#include "game.h"
 
 const int Render::WIDTH = 1024;
 const int Render::HEIGHT = 640;
