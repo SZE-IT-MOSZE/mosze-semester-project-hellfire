@@ -8,8 +8,8 @@
 class Player
 {
     public:
-       // Inventory& getInventory();
-      //  Attributes& getAttributes();
+        Inventory* getInventory();
+        Attributes* getAttributes();
         std::string getName();
         void setSkillPoints(int n);
         int getSkillPoints();
@@ -17,12 +17,13 @@ class Player
         void setExperience(int amount);
         int getExperience();
         Player();
+        ~Player();
     protected:
 
     private:
-        //Inventory inventory;
+        Inventory* inventory;
         int availableSkillPoints;
-        //Attributes attributes;
+        Attributes* attributes;
         std::string name;
         int experience;
        // Item& equippedItem;
