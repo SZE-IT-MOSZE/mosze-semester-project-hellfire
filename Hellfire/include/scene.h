@@ -23,6 +23,7 @@ class Scene
         std::string art;
         std::string order;
         std::string storybit;
+        int d20numberGenerator();
 };
 
 #endif // SCENE_H
