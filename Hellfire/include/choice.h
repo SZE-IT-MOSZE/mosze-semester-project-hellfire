@@ -14,7 +14,8 @@ class Choice
         int getExperience();
         int getCorruption();
         int getStep();
-        Choice(int dif, int cor, std::string txt, int exp, int tp, int stp);
+        void setFailed();
+        Choice(int dif, int cor, std::string txt, int exp, std::string tp, int stp);
 
     protected:
 

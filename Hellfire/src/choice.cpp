@@ -1,12 +1,19 @@
 #include "choice.h"
 
-Choice::Choice(int dif, int cor, std::string txt, int exp, int tp, int stp) {
+Choice::Choice(int dif, int cor, std::string txt, int exp, std::string tp, int stp) {
     difficulty = dif;
     corruption = cor;
     text = txt;
     experience = exp;
     step = stp;
-    type = static_cast<ChoiceType>(tp);
+        if(tp == "str")
+              type = ChoiceType::Strength;
+        else if(tp == "int")
+              type = ChoiceType::Intelligence;
+        else if(tp == "per")
+              type = ChoiceType::Persuasion;
+        else
+             type = ChoiceType::Default;
     failed = false;
     chosen = false;
 }
@@ -41,4 +48,8 @@ int Choice::getExperience(){
 
 int Choice::getCorruption(){
     return corruption;
+}
+
+void Choice::setFailed() {
+    failed = true;
 }
