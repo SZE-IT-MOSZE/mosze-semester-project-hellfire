@@ -35,13 +35,15 @@ Chapter* GameStateManager::loadChapterFromXML(int chapterIndex) {
 
                     std::string order = scene -> Attribute("order");
                     std::string art= artChild->GetText();
-                    std::string storybit = storyChild -> GetText();
+                    std::string storybit = " ";
+                    if(storyChild->GetText() != nullptr)
+                        storybit = storyChild->GetText();
                     std::vector<Choice*> choices = {};
 
                     for (XMLElement* choice = options->FirstChildElement(); choice != NULL; choice = choice->NextSiblingElement())
                     {
                         int diff = atoi(choice -> Attribute("diff"));
-                        int attr = atoi(choice -> Attribute("attr"));
+                        std::string attr = choice -> Attribute("attr");
                         int exp = atoi(choice -> Attribute("exp"));
                         int cpn = atoi(choice -> Attribute("cpn"));
                         int step = atoi(choice -> Attribute("step"));
