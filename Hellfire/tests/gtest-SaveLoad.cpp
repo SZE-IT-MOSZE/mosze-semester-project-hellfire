@@ -19,10 +19,10 @@ class SaveLoadTest : public ::testing::Test{
     }
 };
 
-TEST_F(SaveLoadTest, saveFromGame)
+/*TEST_F(SaveLoadTest, saveFromGame)
 {
     EXPECT_NE(gsm.loadGameStateFromXML("gameState.xml",TestPlayer,TestChapter),false);
-}
+}*/
 
 TEST_F(SaveLoadTest, fileUsing)
 {
@@ -32,7 +32,7 @@ TEST_F(SaveLoadTest, fileUsing)
 
     gsm.saveGameStateToXML("testSave.xml",TestPlayer,LoadedChapter->getOrder(),LoadedChapter->getSceneIndex(),&LoadedChapter->getActScene()->getChoices());//Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices);
 
-    Chapter* chapterFromXML;
+    Chapter* chapterFromXML  = nullptr;
     EXPECT_EQ(gsm.loadGameStateFromXML("testSave.xml",TestPlayer,chapterFromXML),true);
     TestPlayer = gsm.getPlayerState();
 
