@@ -10,6 +10,14 @@ Attributes::Attributes()
     corruptionLevel = 0;
 }
 
+Attributes::Attributes(int str, int intlg, int per, int cpn)
+{
+    strength = str;
+    intelligence = intlg;
+    persuasion = per;
+    corruptionLevel = cpn;
+}
+
 int Attributes::getStrength()
 {
     return strength;
@@ -23,6 +31,10 @@ int Attributes::getIntelligence()
 int Attributes::getPersuasion()
 {
     return persuasion;
+}
+
+int Attributes::getCorruption() {
+    return corruptionLevel;
 }
 
 void Attributes::upgradeStrength()
