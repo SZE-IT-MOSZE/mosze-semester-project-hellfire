@@ -2,10 +2,16 @@
 
 Player::Player()
 {
-    name = "";
     availableSkillPoints = 5;
     experience = 0;
     attributes = new Attributes();
+    inventory = new Inventory();
+}
+
+Player::Player(int skillPoints, int exp, Attributes* attrb) {
+    availableSkillPoints = skillPoints;
+    experience = exp;
+    attributes = attrb;
     inventory = new Inventory();
 }
 
@@ -23,11 +29,6 @@ Attributes* Player::getAttributes()
     return attributes;
 }
 
-std::string Player::getName()
-{
-    return name;
-}
-
 void Player::setSkillPoints(int n)
 {
     availableSkillPoints += n;
@@ -36,11 +37,6 @@ void Player::setSkillPoints(int n)
 int Player::getSkillPoints()
 {
     return availableSkillPoints;
-}
-
-void Player::setName(std::string name)
-{
-    name = name;
 }
 
 void Player::setExperience(int amount)

@@ -10,13 +10,12 @@ class Player
     public:
         Inventory* getInventory();
         Attributes* getAttributes();
-        std::string getName();
         void setSkillPoints(int n);
         int getSkillPoints();
-        void setName(std::string name);
         void setExperience(int amount);
         int getExperience();
         Player();
+        Player(int skillPoints, int experience, Attributes* attributes);
         ~Player();
     protected:
 
