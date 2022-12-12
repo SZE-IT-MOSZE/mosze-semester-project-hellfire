@@ -17,12 +17,12 @@ Game::Game() { }
 
 void Game::saveGame() {
     GameStateManager stateManager;
-    stateManager.saveGameStateToXML(player, actualChapter->getOrder(), actualChapter->getSceneIndex(), &actualChapter->getActScene()->getChoices());
+    stateManager.saveGameStateToXML("gameState.xml", player, actualChapter->getOrder(), actualChapter->getSceneIndex(), &actualChapter->getActScene()->getChoices());
 }
 
 bool Game::loadGame() {
     GameStateManager stateManager;
-    bool result = stateManager.loadGameStateFromXML(player, actualChapter);
+    bool result = stateManager.loadGameStateFromXML("gameState.xml", player, actualChapter);
     if(result) {
         player = stateManager.getPlayerState();
         actualChapter = stateManager.getChapterState();

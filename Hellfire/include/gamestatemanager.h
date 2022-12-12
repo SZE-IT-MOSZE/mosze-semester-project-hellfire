@@ -12,8 +12,8 @@ class GameStateManager
     public:
         GameStateManager();
         Chapter* loadChapterFromXML(int chapterIndex);
-        void saveGameStateToXML(Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices);
-        bool loadGameStateFromXML(Player* player, Chapter* chapter);
+        void saveGameStateToXML(std::string filename, Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices);
+        bool loadGameStateFromXML(std::string filename, Player* player, Chapter* chapter);
         Player* getPlayerState();
         Chapter* getChapterState();
     private:

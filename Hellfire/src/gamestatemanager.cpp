@@ -72,7 +72,7 @@ void GameStateManager::insertToXmlElement(std::string newElementName, int value,
     parent->InsertEndChild(newElement);
 }
 
-void GameStateManager::saveGameStateToXML(Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices) {
+void GameStateManager::saveGameStateToXML(std::string filename, Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices) {
     XMLDocument xmlState;
     XMLNode * root = xmlState.NewElement("state");
     xmlState.InsertFirstChild(root);
@@ -98,12 +98,12 @@ void GameStateManager::saveGameStateToXML(Player* player, int chapterIndex, int 
     root->InsertEndChild(pChapter);
     root->InsertEndChild(pPlayer);
 
-    xmlState.SaveFile("gameState.xml");
+    xmlState.SaveFile(filename.c_str());
 }
 
-bool GameStateManager::loadGameStateFromXML(Player* player, Chapter* chapter) {
+bool GameStateManager::loadGameStateFromXML(std::string filename, Player* player, Chapter* chapter) {
     XMLDocument xmlState;
-    XMLError result = xmlState.LoadFile("gameState.xml");
+    XMLError result = xmlState.LoadFile(filename.c_str());
     if(result != XML_SUCCESS) {
         return false;
     }
