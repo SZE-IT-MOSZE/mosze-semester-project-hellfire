@@ -632,7 +632,11 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
     SDL_RenderClear(Render::renderer);
 
     Scene* actScene = actualChapter->getActScene();
+
     std::vector<Choice*>& choices =  actScene->getChoices();
+    if(actualChapter->isLastChapter()) {
+        choices = std::vector<Choice*>({actScene->getChoices()[0]});
+    }
 
     SDL_Surface* background = SDL_LoadBMP(actScene->getArt().c_str());
     SDL_Surface* dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
@@ -747,6 +751,9 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                             }
                             if (choices[i]->getStep() == 0)
                             {
+                                if(actualChapter->isLastChapter()) {
+                                    return -10;
+                                }
                                 openInterludeWindow(font, storyFont);
                                 return 0;
                             }
