@@ -1,5 +1,5 @@
 <story>
-    <chapter order="1" title="ÚT A SÖTÉT FÖLDÖN">
+    <chapter order="1" title="ÚT A SÖTÉT FÖLDÖN" isLast="0">
 	
         <scene order="1">
             <art>assets/help.bmp</art>
@@ -154,7 +154,7 @@
         </scene>
     </chapter>
 
-	<chapter order="2" title="EGY VÁRATLAN TALÁLKOZÁS A MÚLTBÓL">
+	<chapter order="2" title="EGY VÁRATLAN TALÁLKOZÁS A MÚLTBÓL" isLast="0">
 
         <scene order="1">
             <art>assets/Mordor3.bmp</art>
@@ -257,7 +257,7 @@
         </scene>
     </chapter>
 
-    <chapter order="3" title="ŐSI TUDÁS">
+    <chapter order="3" title="ŐSI TUDÁS" isLast="0">
 
         <scene order="1">
             <art>assets/Lughash.bmp</art>
@@ -387,7 +387,7 @@
         </scene>
     </chapter>
 
-    <chapter order="4" title="SÖTÉT ÁLOM">
+    <chapter order="4" title="SÖTÉT ÁLOM" isLast="0">
 
         <scene order="1">
             <art>assets/Tent.bmp</art>
@@ -602,7 +602,7 @@
         </scene>
     </chapter>
 
-    <chapter order="5" title="A GYÓGYULÁS ÁRA">
+    <chapter order="5" title="A GYÓGYULÁS ÁRA" isLast="1">
 
         <scene order="1">
             <art>assets/Mordor2.bmp</art>

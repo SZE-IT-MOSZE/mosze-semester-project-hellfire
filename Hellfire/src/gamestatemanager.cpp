@@ -28,6 +28,7 @@ Chapter* GameStateManager::loadChapterFromXML(int chapterIndex)
         {
             int cOrder = atoi(chapter -> Attribute("order"));
             std::string title = chapter -> Attribute("title");
+            bool isLast = atoi(chapter -> Attribute("isLast"));
             std::vector<Scene*> scenes = {};
             for (XMLElement* scene = chapter->FirstChildElement(); scene != NULL; scene = scene->NextSiblingElement())
             {
@@ -54,7 +55,7 @@ Chapter* GameStateManager::loadChapterFromXML(int chapterIndex)
                 }
                 scenes.push_back(new Scene(storybit, art, order, choices));
             }
-            return new Chapter(cOrder, title, scenes);
+            return new Chapter(cOrder, title, scenes, isLast);
         }
     }
     return nullptr;
