@@ -31,11 +31,11 @@ class StoryTest : public ::testing::Test{
         TestPlayer->setExperience(0);
         TestPlayer->setSkillPoints(0);
 
-        choice1 = new Choice(0,0,"valasztas1",10,0,1);
-        choice2 = new Choice(10,0,"valasztas2",20,0,1);
-        choice3 = new Choice(0,0,"valasztas3",5,0,1);
-        choice4 = new Choice(0,0,"valasztas4",100,0,1);
-        choice5 = new Choice(0,0,"valasztas5",200,0,1);
+        choice1 = new Choice(0,0,"valasztas1",10,"",1);
+        choice2 = new Choice(10,0,"valasztas2",20,"",1);
+        choice3 = new Choice(0,0,"valasztas3",5,"",1);
+        choice4 = new Choice(0,0,"valasztas4",100,"",1);
+        choice5 = new Choice(0,0,"valasztas5",200,"",1);
         scene1 = new Scene("story bit 1","art1","1",{choice1,choice2});
         scene2 = new Scene("story bit 2","art2","2",{choice3});
         scene3 = new Scene("story bit 3","art3","3",{choice4,choice5});
@@ -95,7 +95,7 @@ TEST_F(StoryTest, FileLoadedChapterTest)
     EXPECT_EQ(LoadedChapter->getSceneIndex(),0);
     LoadedChapter->nextScene(1);
     EXPECT_EQ(LoadedChapter->getSceneIndex(),1);
-    EXPECT_EQ(LoadedChapter->getSceneCount(),17);
+    EXPECT_EQ(LoadedChapter->getSceneCount(),18);
 
     Scene* actScene = LoadedChapter->getActScene();
     EXPECT_EQ(actScene->getOrder(),"2");
