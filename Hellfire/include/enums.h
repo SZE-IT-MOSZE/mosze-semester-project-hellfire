@@ -3,11 +3,21 @@
 
 enum class ChoiceType
 {
-    Strength,
-    Intelligence,
-    Persuasion,
-    Default
+    Strength = 1,
+    Intelligence = 2,
+    Persuasion = 3,
+    Default = 0
 };
+
+inline const char* getChoiceTypeText(ChoiceType tp) {
+
+    switch(tp) {
+        case ChoiceType::Strength: return "strength";
+        case ChoiceType::Intelligence: return "intelligence";
+        case ChoiceType::Persuasion: return "persuasion";
+        default: return "";
+    }
+}
 
 enum class ConsumableType
 {
