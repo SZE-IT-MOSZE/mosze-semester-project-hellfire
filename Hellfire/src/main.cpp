@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
             Game::newGame();
 
            while(true) {
-               if(Game::turn(font, storyFont) == 0) {
+               if(Game::turn(font, storyFont) == -10) {
                     std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                     break;
                }
