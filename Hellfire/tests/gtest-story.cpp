@@ -24,6 +24,7 @@ class StoryTest : public ::testing::Test{
     Choice* choice3;
     Choice* choice4;
     Choice* choice5;
+    GameStateManager* gsm;
 
 
     void SetUp() override {
@@ -44,8 +45,16 @@ class StoryTest : public ::testing::Test{
 
 
 
-        GameStateManager* gsm = new GameStateManager();
+        gsm = new GameStateManager();
         LoadedChapter = gsm->loadChapterFromXML(1);
+
+
+    }
+
+    void TearDown() override {
+        delete TestPlayer;
+        delete TestChapter;
+        delete gsm;
 
     }
 };
@@ -69,6 +78,8 @@ TEST_F(StoryTest, ManualyLoadedChapterTest)
     TestChapter->nextScene(1);
     EXPECT_EQ(TestChapter->getSceneIndex(),3);
 
+
+    EXPECT_EQ(gsm->loadChapterFromXML(-1),nullptr);
 }
 
 TEST_F(StoryTest, ManualyLoadedChapterTest_Experience)
@@ -76,6 +87,7 @@ TEST_F(StoryTest, ManualyLoadedChapterTest_Experience)
 
     for (int i = 0;i<= 2;i++)
     {
+
         Scene* actScene = TestChapter->getActScene();
         //EXPECT_EQ(actScene->getOrder(),1);
 
@@ -104,8 +116,7 @@ TEST_F(StoryTest, FileLoadedChapterTest)
     actScene->chooseChoice((actScene->getChoices()[0]), TestPlayer);
     EXPECT_EQ(TestPlayer->getExperience(),10);
 
-
-
 }
+
 
 
