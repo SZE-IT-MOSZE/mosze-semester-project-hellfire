@@ -1,6 +1,7 @@
 #include "player.h"
 
-Player::Player()  {
+Player::Player()
+{
     name = "";
     availableSkillPoints = 5;
     experience = 0;
@@ -8,38 +9,47 @@ Player::Player()  {
     inventory = new Inventory();
 }
 
-int Player::getExperience() {
+int Player::getExperience()
+{
     return experience;
 }
 
-Inventory* Player::getInventory(){
+Inventory* Player::getInventory()
+{
     return inventory;
 }
-Attributes* Player::getAttributes() {
+Attributes* Player::getAttributes()
+{
     return attributes;
 }
 
-std::string Player::getName(){
+std::string Player::getName()
+{
     return name;
 }
 
-void Player::setSkillPoints(int n){
+void Player::setSkillPoints(int n)
+{
     availableSkillPoints += n;
 }
 
-int Player::getSkillPoints(){
+int Player::getSkillPoints()
+{
     return availableSkillPoints;
 }
 
-void Player::setName(std::string name) {
+void Player::setName(std::string name)
+{
     name = name;
 }
 
-void Player::setExperience(int amount) {
+void Player::setExperience(int amount)
+{
     experience += amount;
 }
 
-Player::~Player() {
+Player::~Player()
+{
     delete attributes;
     delete inventory;
 }
