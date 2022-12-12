@@ -32,6 +32,19 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        else if(result == MenuOptions::LOAD_GAME) {
+            if(Game::loadGame()) {
+                std::cout << Game::getPlayer()->getExperience() << std::endl;
+                while(true)
+                {
+                    if(Game::turn(font, storyFont) == -10)
+                    {
+                        std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 
