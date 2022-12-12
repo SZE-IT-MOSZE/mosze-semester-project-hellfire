@@ -12,10 +12,9 @@ class Game
     public:
         static Chapter* getChapter();
         static Player* getPlayer();
-        static void setChapter(Chapter * newChapter);
-        static void loadNextChapter();
+        static void loadNextChapter(int chapterIndex);
         static void openInventory();
-        static void openAttribueWindow();
+        static void openAttribueWindow(TTF_Font* font, TTF_Font* titleFont);
         static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState);
         static void newGame();
         static int turn(TTF_Font* font, TTF_Font* storyFont);
@@ -27,7 +26,7 @@ class Game
         Game();
         static Player* player;
         static Chapter* actualChapter;
-
+        static void openInterludeWindow(TTF_Font* titleFont, TTF_Font* font);
 };
 
 #endif // GAME_H
