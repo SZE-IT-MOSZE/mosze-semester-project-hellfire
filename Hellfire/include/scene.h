@@ -4,11 +4,12 @@
 #include "choice.h"
 #include <iostream>
 #include <vector>
+#include "player.h"
 
 class Scene
 {
     public:
-        void chooseChoice(Choice* chosenChoice);
+        void chooseChoice(Choice* chosenChoice, Player* player);
         Scene(std::string sb, std::string a,  std::string order, std::vector<Choice*> chs);
         std::string getArt();
         std::string getStorybit();
@@ -22,6 +23,7 @@ class Scene
         std::string art;
         std::string order;
         std::string storybit;
+        int d20numberGenerator();
 };
 
 #endif // SCENE_H

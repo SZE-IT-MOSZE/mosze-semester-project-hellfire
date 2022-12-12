@@ -2,24 +2,57 @@
 
 using namespace std;
 
-int Attributes::getStrength() {
+Attributes::Attributes()
+{
+    strength = 0;
+    intelligence = 0;
+    persuasion = 0;
+    corruptionLevel = 0;
 }
 
-int Attributes::getIntelligence(){
-
+Attributes::Attributes(int str, int intlg, int per, int cpn)
+{
+    strength = str;
+    intelligence = intlg;
+    persuasion = per;
+    corruptionLevel = cpn;
 }
 
-int Attributes::getPersuasion(){
-
+int Attributes::getStrength()
+{
+    return strength;
 }
 
-void Attributes::upgradeStrength(){
-
+int Attributes::getIntelligence()
+{
+    return intelligence;
 }
 
-void Attributes::upgradeIntelligence(){
+int Attributes::getPersuasion()
+{
+    return persuasion;
 }
 
-void Attributes::upgradePersuasion() {
+int Attributes::getCorruption() {
+    return corruptionLevel;
+}
 
+void Attributes::upgradeStrength()
+{
+    strength += 1;
+}
+
+void Attributes::upgradeIntelligence()
+{
+    intelligence += 1;
+}
+
+void Attributes::upgradePersuasion()
+{
+    persuasion += 1;
+}
+
+void Attributes::setCorruption(int amount)
+{
+    corruptionLevel += amount;
 }

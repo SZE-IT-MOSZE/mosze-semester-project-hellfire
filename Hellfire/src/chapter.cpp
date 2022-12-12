@@ -3,62 +3,65 @@
 using namespace std;
 
 
-Chapter::Chapter(int odr, std::string ttl, std::vector<Scene*> scns) : scenes(scns) {
+Chapter::Chapter(int odr, std::string ttl, std::vector<Scene*> scns, bool isLast) : scenes(scns)
+{
     order = odr;
     title = ttl;
     actSceneIndex = 0;
+    last = isLast;
 }
 
-/*Chapter& Chapter::operator=(Chapter& ch)  {
-    title = ch.title;
-    order = ch.order;
-    scenes = ch.scenes;
-    actSceneIndex = 0;
-
-    return *this;
-} */
-
-int Chapter::getOrder() {
+int Chapter::getOrder()
+{
     return order;
 }
 
-int Chapter::getSceneCount() {
+int Chapter::getSceneCount()
+{
     return scenes.size();
 }
 
-std::string Chapter::getTitle() {
+std::string Chapter::getTitle()
+{
     return title;
 }
 
-bool Chapter::isFinished(){
-
+void Chapter::setSceneIndex(int index) {
+    actSceneIndex = index;
 }
 
-void Chapter::drawScene() {
-
-}
-
-int Chapter::getSceneIndex() {
+int Chapter::getSceneIndex()
+{
     return actSceneIndex;
 }
 
-Scene* Chapter::getActScene() {
-    if(actSceneIndex < scenes.size()) {
+Scene* Chapter::getActScene()
+{
+    if(actSceneIndex < scenes.size())
+    {
         return scenes[actSceneIndex];
-     }
+    }
+    return nullptr;
 }
 
-Chapter::~Chapter() {
-  for (auto p : scenes)
-   {
-     delete p;
-   }
-   scenes.clear();
+Chapter::~Chapter()
+{
+    for (auto p : scenes)
+    {
+        delete p;
+    }
+    scenes.clear();
 }
 
-void Chapter::nextScene(int step) {
-    if(actSceneIndex < scenes.size()) {
-       actSceneIndex += step;
+bool Chapter::isLastChapter() {
+    return last;
+}
+
+void Chapter::nextScene(int step)
+{
+    if(actSceneIndex < scenes.size())
+    {
+        actSceneIndex += step;
     }
 }
 

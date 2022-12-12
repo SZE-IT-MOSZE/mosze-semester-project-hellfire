@@ -11,7 +11,7 @@ class PlayerTest : public ::testing::Test{
         player2.setExperience(-1);
         player2.setExperience(10);
         player2.setSkillPoints(10);
-        player2.setName("Dummy");
+
     }
 
     void TearDown() override {
@@ -25,13 +25,21 @@ class PlayerTest : public ::testing::Test{
 TEST_F(PlayerTest, DefaultCtor)
 {
     EXPECT_EQ(player1->getExperience(),0);
-    EXPECT_EQ(player1->getSkillPoints(),0);
-    EXPECT_EQ(player1->getName(),"");
+    EXPECT_EQ(player1->getSkillPoints(),5);
+
 }
 
 TEST_F(PlayerTest, PlayerSetters)
 {
-     EXPECT_EQ(player2.getSkillPoints(),10);
+     EXPECT_EQ(player2.getSkillPoints(),15);
      EXPECT_EQ(player2.getExperience(),9);
-     EXPECT_EQ(player2.getName(),"");
+
 }
+
+TEST_F(PlayerTest, PlayerAttributes)
+{
+     EXPECT_EQ(player2.getAttributes()->getStrength(),0);
+     player2.getAttributes()->upgradeStrength();
+     EXPECT_EQ(player2.getAttributes()->getStrength(),1);
+}
+

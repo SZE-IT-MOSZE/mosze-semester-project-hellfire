@@ -2,10 +2,12 @@
 
 using namespace std;
 
-string Item::getName(){
+string Item::getName()
+{
 
 }
 
-int Item::getEffectiveness(){
+int Item::getEffectiveness()
+{
 
 }
