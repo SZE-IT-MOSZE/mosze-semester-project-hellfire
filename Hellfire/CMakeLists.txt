@@ -47,7 +47,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 enable_testing()
 # game test
 
-set(TESTS tests/gtest-player.cpp ) #tests/gtest-game.cpp tests/gtest-story.cpp
+set(TESTS tests/gtest-player.cpp tests/gtest-story.cpp )
 add_executable(test_sajat ${TESTS})
 
 set(SOURCE_FILES_TEST src/attributes.cpp src/chapter.cpp src/chest.cpp src/choice.cpp src/consumable.cpp
@@ -55,13 +55,7 @@ set(SOURCE_FILES_TEST src/attributes.cpp src/chapter.cpp src/chest.cpp src/choic
 
 
 add_library(fullLibary ${PROJECT_SOURCE_DIR}/include ${SOURCE_FILES_TEST} ${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
-#target_include_directories(test_sajat PUBLIC ${CMAKE_SOURCE_DIR}/include ${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
-#include_directories(test_sajat  ${PROJECT_SOURCE_DIR}/include/ ${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} )
-
 target_link_libraries(test_sajat gtest_main fullLibary)
-
-
-
 
 add_test(basic_game test_sajat)
 

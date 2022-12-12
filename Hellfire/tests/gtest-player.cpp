@@ -25,13 +25,21 @@ class PlayerTest : public ::testing::Test{
 TEST_F(PlayerTest, DefaultCtor)
 {
     EXPECT_EQ(player1->getExperience(),0);
-    EXPECT_EQ(player1->getSkillPoints(),0);
+    EXPECT_EQ(player1->getSkillPoints(),5);
     EXPECT_EQ(player1->getName(),"");
 }
 
 TEST_F(PlayerTest, PlayerSetters)
 {
-     EXPECT_EQ(player2.getSkillPoints(),10);
+     EXPECT_EQ(player2.getSkillPoints(),15);
      EXPECT_EQ(player2.getExperience(),9);
      EXPECT_EQ(player2.getName(),"");
 }
+
+TEST_F(PlayerTest, PlayerAttributes)
+{
+     EXPECT_EQ(player2.getAttributes()->getStrength(),0);
+     player2.getAttributes()->upgradeStrength();
+     EXPECT_EQ(player2.getAttributes()->getStrength(),1);
+}
+
