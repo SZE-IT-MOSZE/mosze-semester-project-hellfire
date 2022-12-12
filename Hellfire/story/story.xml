@@ -485,7 +485,7 @@
             <storybit>A trónterembe belépve megpillantották a Sötét Urat, de az nem volt nyugtalan, mintha várta volna ezt a percet a trónjában ülve (...) Jöjj ifjú herceg, van valamim számodra, amit látnod kell!</storybit>
             <options>
                 <option diff="100" attr="str" exp="10" cpn="0" step="1">Hallgass, számodra csak egy dolog vár, eleget gyötörted a népem, uralmadnak most vége!</option>
-                <option diff="0" attr="def" exp="10" cpn="0" step="4">Calenion, Findel minden rendben lesz, várjatok itt!</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="5">Calenion, Findel minden rendben lesz, várjatok itt!</option>
             </options>
         </scene>
 
