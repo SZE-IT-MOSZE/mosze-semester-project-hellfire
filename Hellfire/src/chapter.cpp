@@ -25,9 +25,8 @@ std::string Chapter::getTitle()
     return title;
 }
 
-void Chapter::drawScene()
-{
-
+void Chapter::setSceneIndex(int index) {
+    actSceneIndex = index;
 }
 
 int Chapter::getSceneIndex()

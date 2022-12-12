@@ -7,12 +7,12 @@
 class Chapter
 {
     public:
-        void drawScene();
         void nextScene(int step);
         std::string getTitle();
         int getOrder();
         int getSceneIndex();
         int getSceneCount();
+        void setSceneIndex(int index);
         Scene* getActScene();
         Chapter(int odr, std::string ttl, std::vector<Scene*> scns);
         Chapter(std::vector<Scene*> scns);
