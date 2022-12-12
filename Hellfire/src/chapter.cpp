@@ -3,11 +3,12 @@
 using namespace std;
 
 
-Chapter::Chapter(int odr, std::string ttl, std::vector<Scene*> scns) : scenes(scns)
+Chapter::Chapter(int odr, std::string ttl, std::vector<Scene*> scns, bool isLast) : scenes(scns)
 {
     order = odr;
     title = ttl;
     actSceneIndex = 0;
+    last = isLast;
 }
 
 int Chapter::getOrder()
@@ -50,6 +51,10 @@ Chapter::~Chapter()
         delete p;
     }
     scenes.clear();
+}
+
+bool Chapter::isLastChapter() {
+    return last;
 }
 
 void Chapter::nextScene(int step)
