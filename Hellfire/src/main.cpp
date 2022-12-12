@@ -2,7 +2,8 @@
 #include "game.h"
 #include "render.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     SDL_Surface* windowSurface = SDL_GetWindowSurface(Render::window);
 
     TTF_Init();
@@ -11,20 +12,25 @@ int main(int argc, char *argv[]) {
     TTF_Font *titleFont = TTF_OpenFont("assets/hobbiton.ttf", 50);
 
     int result = 0;
-    while(true) {
+    while(true)
+    {
         result = Game::openMenu(windowSurface, font, titleFont, result);
-        if(result == MenuOptions::EXIT_GAME) {
+        if(result == MenuOptions::EXIT_GAME)
+        {
             break;
         }
-        else if(result == MenuOptions::NEW_GAME) {
+        else if(result == MenuOptions::NEW_GAME)
+        {
             Game::newGame();
 
-           while(true) {
-               if(Game::turn(font, storyFont) == 0) {
+            while(true)
+            {
+                if(Game::turn(font, storyFont) == -10)
+                {
                     std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                     break;
-               }
-           }
+                }
+            }
         }
     }
 
@@ -33,7 +39,7 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
     TTF_CloseFont(font);
     TTF_CloseFont(titleFont);
-     TTF_CloseFont(storyFont);
+    TTF_CloseFont(storyFont);
     TTF_Quit();
     return EXIT_SUCCESS;
 }

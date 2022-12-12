@@ -1,7 +1,6 @@
 #ifndef ATTRIBUTES_H
 #define ATTRIBUTES_H
 
-
 class Attributes
 {
     public:
@@ -11,8 +10,8 @@ class Attributes
         void upgradeStrength();
         void upgradeIntelligence();
         void upgradePersuasion();
-
-    protected:
+        void setCorruption(int amount);
+        Attributes();
 
     private:
         int strength;

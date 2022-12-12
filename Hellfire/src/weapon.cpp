@@ -1,17 +1,21 @@
 #include "weapon.h"
 
-int Weapon::getType(){
+int Weapon::getType()
+{
+    return -1;
+}
+
+void Weapon::equip()
+{
 
 }
 
-void Weapon::equip(){
+void Weapon::dequip()
+{
 
 }
 
-void Weapon::dequip(){
-
-}
-
-bool Weapon::isEquipped(){
-
+bool Weapon::isEquipped()
+{
+    return false;
 }
