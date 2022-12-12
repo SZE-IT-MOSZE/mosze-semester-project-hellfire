@@ -41,9 +41,7 @@ class StoryTest : public ::testing::Test{
         scene2 = new Scene("story bit 2","art2","2",{choice3});
         scene3 = new Scene("story bit 3","art3","3",{choice4,choice5});
         std::vector<Scene*> scenes = {scene1,scene2,scene3};
-        TestChapter = new Chapter(99,"title",scenes);
-
-
+        TestChapter = new Chapter(99,"title",scenes,false);
 
         gsm = new GameStateManager();
         LoadedChapter = gsm->loadChapterFromXML(1);
