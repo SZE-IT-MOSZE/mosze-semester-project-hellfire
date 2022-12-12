@@ -15,6 +15,21 @@ Player* Game::player = nullptr;
 
 Game::Game() { }
 
+void Game::saveGame() {
+    GameStateManager stateManager;
+    stateManager.saveGameStateToXML(player, actualChapter->getOrder(), actualChapter->getSceneIndex(), &actualChapter->getActScene()->getChoices());
+}
+
+bool Game::loadGame() {
+    GameStateManager stateManager;
+    bool result = stateManager.loadGameStateFromXML(player, actualChapter);
+    if(result) {
+        player = stateManager.getPlayerState();
+        actualChapter = stateManager.getChapterState();
+    }
+    return result;
+}
+
 Chapter* Game::getChapter()
 {
     return actualChapter;
@@ -33,6 +48,130 @@ void Game::loadNextChapter(int chapterIndex)
 Player* Game::getPlayer()
 {
     return player;
+}
+
+int Game::openInGameMenu(TTF_Font* font)
+{
+    SDL_RenderClear(Render::renderer);
+    bool selected[2] = {true, false};
+    SDL_Color color[2] = {{255,255,255}, {255,0,0}};
+    SDL_Surface* background = SDL_LoadBMP("assets/main.bmp");
+    SDL_Surface* title = TTF_RenderUTF8_Solid(font, "Menü", color[0]);
+    SDL_Surface* menus[2] =  {TTF_RenderUTF8_Solid(font, "Mentés", color[1]),
+                              TTF_RenderUTF8_Solid(font, "Játékmenet befejezése", color[0]),
+                             };
+    SDL_Rect pos[2] =  { {
+            Render::WIDTH / 2 - menus[0]->clip_rect.w / 2,
+            Render::HEIGHT / 2 - menus[0]->clip_rect.h,
+            menus[0]->w, menus[0]->h
+        },
+        {
+            Render::WIDTH / 2 - menus[1]->clip_rect.w / 2,
+            Render::HEIGHT / 2 + menus[1]->clip_rect.h,
+            menus[1]->w, menus[1]->h
+        },
+    };
+    SDL_Rect pos_img = {  0,
+                          0,
+                          background->w, background->h
+                       };
+    SDL_Rect pos_title =  {Render::WIDTH / 2 - title->clip_rect.w/2,
+                          Render::HEIGHT / 4 - title->clip_rect.h,
+                         title->w, title->h};
+
+    Render::renderSurface(background, pos_img);
+    Render::renderSurface(title, pos_title);
+    for(int i = 0; i < 2; i++)
+    {
+        Render::renderSurface(menus[i], pos[i]);
+    }
+
+    Uint32 time;
+    SDL_Event event;
+    while(true)
+    {
+        time=SDL_GetTicks();
+        if(SDL_PollEvent(&event))
+        {
+            switch(event.type)
+            {
+            case SDL_QUIT:
+                return 1;
+            case SDL_KEYDOWN:
+                if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
+                {
+                    if(selected[1])
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        //Mentés
+                        saveGame();
+                        return 1;
+                    }
+                }
+                else if(SDLK_ESCAPE == event.key.keysym.sym)
+                {
+                    return 1;
+                }
+                else if(SDLK_UP == event.key.keysym.sym)
+                {
+                    background = SDL_LoadBMP("assets/main.bmp");
+                    title = TTF_RenderUTF8_Solid(font, "Menü", color[0]);
+                    if(selected[0])
+                    {
+                        selected[0] = false;
+                        selected[1] = true;
+                        menus[0] = TTF_RenderUTF8_Solid(font, "Mentés", color[0]);
+                        menus[1] =  TTF_RenderUTF8_Solid(font, "Játékmenet befejezése", color[1]);
+                    }
+                    else
+                    {
+                        selected[1] = false;
+                        selected[0] = true;
+                        menus[0] = TTF_RenderUTF8_Solid(font, "Mentés", color[1]);
+                        menus[1] =  TTF_RenderUTF8_Solid(font, "Játékmenet befejezése", color[0]);
+                    }
+                    SDL_RenderClear(Render::renderer);
+                    Render::renderSurface(background, pos_img);
+                    Render::renderSurface(title, pos_title);
+                    for(int i = 0; i < 2; i++)
+                    {
+                        Render::renderSurface(menus[i], pos[i]);
+                    }
+                }
+
+                else if(SDLK_DOWN == event.key.keysym.sym)
+                {
+                    background = SDL_LoadBMP("assets/main.bmp");
+                    title = TTF_RenderUTF8_Solid(font, "Menü", color[0]);
+                    if(selected[1])
+                    {
+                        selected[1] = false;
+                        selected[0] = true;
+                        menus[0] = TTF_RenderUTF8_Solid(font, "Mentés", color[1]);
+                        menus[1] =  TTF_RenderUTF8_Solid(font, "Játékmenet befejezése", color[0]);
+                    }
+                    else
+                    {
+                        selected[0] = false;
+                        selected[1] = true;
+                        menus[0] = TTF_RenderUTF8_Solid(font, "Mentés", color[0]);
+                        menus[1] =  TTF_RenderUTF8_Solid(font, "Játékmenet befejezése", color[1]);
+                    }
+                    SDL_RenderClear(Render::renderer);
+                    Render::renderSurface(background, pos_img);
+                    Render::renderSurface(title, pos_title);
+                    for(int i = 0; i < 2; i++)
+                    {
+                        Render::renderSurface(menus[i], pos[i]);
+                    }
+                }
+            }
+        }
+    }
+    return -1;
 }
 
 void Game::openInventory()
@@ -595,12 +734,7 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
             case SDL_QUIT:
                 return -1;
             case SDL_KEYDOWN:
-                if(SDLK_ESCAPE == event.key.keysym.sym)
-                {
-                    // return 0;
-                }
-
-                else if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
+                if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
                     for(int i = 0; i < choices.size(); i++)
                     {
@@ -721,13 +855,28 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                     story = TTF_RenderUTF8_Solid_Wrapped(storyFont, actualChapter->getActScene()->getStorybit().c_str(), color[0], Render::WIDTH - 50);
                     Render::renderSurface(background, pos_img);
                     Render::renderSurface(dialogFrame, pos_frame);
-                    if(actualChapter->getSceneIndex() == 0)
+                    if(actualChapter->getSceneIndex() == 0 && actualChapter->getOrder() > 1)
                     {
+
                         SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
                         SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
                                               Render::HEIGHT / 4 - title->clip_rect.h,
                                               title->w, title->h
                                              };
+
+                        Render::renderSurface(title, titlePos);
+
+                    }
+                    else if(actualChapter->getOrder() == 1 && actualChapter->getSceneIndex() == 1)
+                    {
+                        SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
+                        SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                              Render::HEIGHT / 4 - title->clip_rect.h,
+                                              title->w, title->h
+                                             };
+
                         Render::renderSurface(title, titlePos);
                     }
 
@@ -754,6 +903,73 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         {
                             choiceMenu[i] = TTF_RenderUTF8_Solid_Wrapped(storyFont, text.c_str(), color[0], Render::WIDTH - 100);
                             Render::renderSurface(choiceMenu[i], choiceMenuPos[i]);
+                        }
+                    }
+                }
+                else if(SDLK_ESCAPE == event.key.keysym.sym)
+                {
+                    int result = openInGameMenu(font);
+                    SDL_RenderClear(Render::renderer);
+                    if(result == 0)
+                    {
+                        return -10;
+                    }
+                    else
+                    {
+                        background = SDL_LoadBMP(actScene->getArt().c_str());
+                        dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
+                        story = TTF_RenderUTF8_Solid_Wrapped(storyFont, actualChapter->getActScene()->getStorybit().c_str(), color[0], Render::WIDTH - 50);
+                        Render::renderSurface(background, pos_img);
+                        Render::renderSurface(dialogFrame, pos_frame);
+                        if(actualChapter->getSceneIndex() == 0 && actualChapter->getOrder() > 1)
+                        {
+
+                            SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
+                            SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                                  Render::HEIGHT / 4 - title->clip_rect.h,
+                                                  title->w, title->h
+                                                 };
+
+                            Render::renderSurface(title, titlePos);
+
+                        }
+                        else if(actualChapter->getOrder() == 1 && actualChapter->getSceneIndex() == 1)
+                        {
+                            SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
+                            SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                                  Render::HEIGHT / 4 - title->clip_rect.h,
+                                                  title->w, title->h
+                                                 };
+
+                            Render::renderSurface(title, titlePos);
+                        }
+
+                        Render::renderSurface(story, storyPos);
+                        for(int i = 0; i < choices.size(); i++)
+                        {
+                            std::string text = std::to_string(i + 1) + ". " + choices[i]->getText();
+                            if(choices[i]->getType() != static_cast<int>(ChoiceType::Default))
+                            {
+                                text += " (" +  std::to_string(choices[i]->getDifficulty()) + " " +
+                                        getChoiceTypeText(static_cast<ChoiceType>(choices[i]->getType())) + ")";
+                            }
+
+                            if(choices[i]->isFailed())
+                            {
+                                text += " [Failed]";
+                            }
+                            if(selected[i])
+                            {
+                                choiceMenu[i] = TTF_RenderUTF8_Solid_Wrapped(storyFont, text.c_str(), color[1], Render::WIDTH - 100);
+                                Render::renderSurface(choiceMenu[i], choiceMenuPos[i]);
+                            }
+                            else
+                            {
+                                choiceMenu[i] = TTF_RenderUTF8_Solid_Wrapped(storyFont, text.c_str(), color[0], Render::WIDTH - 100);
+                                Render::renderSurface(choiceMenu[i], choiceMenuPos[i]);
+                            }
                         }
                     }
                 }

@@ -17,6 +17,9 @@ class Game
         static void openAttribueWindow(TTF_Font* font, TTF_Font* titleFont);
         static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState);
         static void newGame();
+        static void saveGame();
+        static bool loadGame();
+        static int openInGameMenu(TTF_Font* font);
         static int turn(TTF_Font* font, TTF_Font* storyFont);
         static const char* GAME_TITLE;
         ~Game();
