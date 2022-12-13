@@ -1,0 +1,17 @@
+<weapons>
+
+    <weapon>
+        <name>Lhang</name>
+		<art>sword.bmp</art>
+        <type>sword</type>
+        <effect>7</effect>
+    </weapon>
+
+    <weapon>
+        <name>Laurelin ága</name>
+		<art>staff.bmp</art>
+        <type>staff</type>
+        <effect>7</effect>
+    </weapon>
+
+</weapons>
