@@ -18,6 +18,82 @@ int Scene::d20numberGenerator()
     return random_integer;
 }
 
+void Scene::attributeCheck(Choice* chosenChoice, Player* player)
+{
+    int choiceType = chosenChoice -> getType();
+    Attributes* playerAttributes = player->getAttributes();
+    int randomFactor = d20numberGenerator();
+    int choiceDiff = chosenChoice->getDifficulty();
+
+    if(chosenChoice -> getType() == static_cast<int>(ChoiceType::Default))
+    {
+        player->setExperience(chosenChoice->getExperience());
+        playerAttributes->setCorruption(chosenChoice->getCorruption());
+        return;
+    }
+
+    if(choiceType == static_cast<int>(ChoiceType::Strength))
+    {
+        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getStrength())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else if(choiceDiff <= playerAttributes->getStrength())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else
+        {
+            chosenChoice->setFailed();
+            return;
+        }
+    }
+
+    else if(choiceType == static_cast<int>(ChoiceType::Intelligence))
+    {
+        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getIntelligence())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else if(choiceDiff <= playerAttributes->getIntelligence())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else
+        {
+            chosenChoice->setFailed();
+            return;
+        }
+    }
+    else
+    {
+        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getPersuasion())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else if(choiceDiff <= playerAttributes->getPersuasion())
+        {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
+            return;
+        }
+        else
+        {
+            chosenChoice->setFailed();
+            return;
+        }
+    }
+}
 
 void Scene::chooseChoice(Choice* chosenChoice, Player* player)
 {
@@ -31,67 +107,7 @@ void Scene::chooseChoice(Choice* chosenChoice, Player* player)
         return;
     }
 
-    int choiceType = chosenChoice -> getType();
-
-    if(chosenChoice -> getType() == static_cast<int>(ChoiceType::Default))
-    {
-        player->setExperience(chosenChoice->getExperience());
-        return;
-    }
-
-    int randomFactor = d20numberGenerator();
-
-    int choiceDiff = chosenChoice->getDifficulty();
-    Attributes* playerAttributes = player->getAttributes();
-
-    if(choiceType == static_cast<int>(ChoiceType::Strength))
-    {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getStrength())
-        {
-            return;
-        }
-        else if(choiceDiff <= playerAttributes->getStrength())
-        {
-            return;
-        }
-        else
-        {
-            chosenChoice->setFailed();
-            return;
-        }
-    }
-    else if(choiceType == static_cast<int>(ChoiceType::Intelligence))
-    {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getIntelligence())
-        {
-            return;
-        }
-        else if(choiceDiff <= playerAttributes->getIntelligence())
-        {
-            return;
-        }
-        else
-        {
-            chosenChoice->setFailed();
-            return;
-        }
-    }
-    else
-    {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getPersuasion())
-        {
-            return;
-        }
-        else if(choiceDiff <= playerAttributes->getPersuasion())
-        {
-            return;
-        }
-        else
-        {
-            chosenChoice->setFailed();
-            return;
-        }
-    }
+    attributeCheck(chosenChoice, player);
 }
 
 std::string Scene::getArt()

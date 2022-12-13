@@ -634,8 +634,16 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
     Scene* actScene = actualChapter->getActScene();
 
     std::vector<Choice*>& choices =  actScene->getChoices();
-    if(actualChapter->isLastChapter()) {
-        choices = std::vector<Choice*>({actScene->getChoices()[0]});
+    int playerCorruption = player->getAttributes()->getCorruption();
+    if(actualChapter->isLastChapter() && actualChapter->getSceneIndex() == actualChapter->getSceneCount() - 1) {
+        if(playerCorruption <= -3) {
+            choices = std::vector<Choice*>({actScene->getChoices()[0]});
+        }
+        else if(playerCorruption >= 2) {
+            choices = std::vector<Choice*>({actScene->getChoices()[3]});
+        } else {
+            choices = std::vector<Choice*>({actScene->getChoices()[2]});
+        }
     }
 
     SDL_Surface* background = SDL_LoadBMP(actScene->getArt().c_str());
