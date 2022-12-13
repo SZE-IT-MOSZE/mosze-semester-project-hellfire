@@ -1,7 +1,6 @@
 #ifndef CHAPTER_H
 #define CHAPTER_H
 
-#include "Chest.h"
 #include "scene.h"
 
 class Chapter
