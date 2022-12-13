@@ -6,6 +6,7 @@ class Item
 {
     public:
         std::string getName();
+        virtual std::string getArt() = 0;
         int getEffectiveness();
         virtual int getType() = 0;
 
@@ -14,6 +15,7 @@ class Item
     private:
         int effectiveness;
         std::string name;
+        std::string art;
 };
 
 #endif // ITEM_H
