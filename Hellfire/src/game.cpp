@@ -185,17 +185,19 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
     bool selected[3] = {true, false, false};
     Attributes* playerAttributes = player->getAttributes();
-
+    SDL_Surface* corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
     std::string skillPointsText = "Szabad skill pontok: " + std::to_string(player->getSkillPoints());
     SDL_Surface* skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
 
     std::string strengthText = "Strength: " + std::to_string(playerAttributes->getStrength());
     std::string intelligenceText = "Intelligence: " + std::to_string(playerAttributes->getIntelligence());
     std::string persuasionText = "Persuasion: " + std::to_string(playerAttributes->getPersuasion());
+    std::string corruptionText = "Corruption: " + std::to_string(playerAttributes->getCorruption());
 
     SDL_Surface* strength = TTF_RenderUTF8_Solid(font, strengthText.c_str(), color[0]);
     SDL_Surface* intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
     SDL_Surface* persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
+    SDL_Surface* corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
 
     SDL_Surface* toggles[3] =
     {
@@ -203,6 +205,16 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
         TTF_RenderUTF8_Solid(font, "Hozzáad", color[0]),
         TTF_RenderUTF8_Solid(font, "Hozzáad", color[0]),
     };
+
+    SDL_Rect img_pos =  {0 + corruptionArt->clip_rect.w,
+                          0 + corruptionArt->clip_rect.h * 3,
+                          corruptionArt->w, corruptionArt->h
+                         };
+    SDL_Rect cpnTextPos = {0 + corruptionArt->clip_rect.w,
+                          0 + corruptionArt->clip_rect.h * 4,
+                          corruption->w, corruption->h
+                         };
+
     SDL_Rect titlePos =  {Render::WIDTH / 2 - skillPoints->clip_rect.w/2,
                           Render::HEIGHT / 4 - skillPoints->clip_rect.h,
                           skillPoints->w, skillPoints->h
@@ -246,6 +258,8 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     Render::renderSurface(strength, pos[0]);
     Render::renderSurface(intelligence, pos[1]);
     Render::renderSurface(persuasion, pos[2]);
+    Render::renderSurface(corruptionArt, img_pos);
+    Render::renderSurface(corruption, cpnTextPos);
     for(int i = 0; i < 3; i++)
     {
         Render::renderSurface(toggles[i], togglePos[i]);
@@ -302,15 +316,21 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     strengthText = "Strength: " + std::to_string(playerAttributes->getStrength());
                     intelligenceText = "Intelligence: " + std::to_string(playerAttributes->getIntelligence());
                     persuasionText = "Persuasion: " + std::to_string(playerAttributes->getPersuasion());
+                    corruptionText = "Corruption: " + std::to_string(playerAttributes->getCorruption());
 
                     strength = TTF_RenderUTF8_Solid(font, strengthText.c_str(), color[0]);
                     intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
+                    corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
 
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+
+                    Render::renderSurface(corruptionArt, img_pos);
                     Render::renderSurface(skillPoints, titlePos);
                     Render::renderSurface(strength, pos[0]);
                     Render::renderSurface(intelligence, pos[1]);
                     Render::renderSurface(persuasion, pos[2]);
+                    Render::renderSurface(corruption, cpnTextPos);
                 }
                 else if(SDLK_j == event.key.keysym.sym)
                 {
@@ -340,6 +360,10 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
                     skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
+                    corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+
+                    Render::renderSurface(corruptionArt, img_pos);
                     for(int i = 0; i < 3; i++)
                     {
                         if(selected[i])
@@ -356,6 +380,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     Render::renderSurface(strength, pos[0]);
                     Render::renderSurface(intelligence, pos[1]);
                     Render::renderSurface(persuasion, pos[2]);
+                    Render::renderSurface(corruption, cpnTextPos);
                 }
 
                 else if(SDLK_DOWN == event.key.keysym.sym)
@@ -382,6 +407,10 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
                     skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
+                    corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+
+                    Render::renderSurface(corruptionArt, img_pos);
                     for(int i = 0; i < 3; i++)
                     {
                         if(selected[i])
@@ -398,6 +427,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     Render::renderSurface(strength, pos[0]);
                     Render::renderSurface(intelligence, pos[1]);
                     Render::renderSurface(persuasion, pos[2]);
+                    Render::renderSurface(corruption, cpnTextPos);
                 }
             }
         }
