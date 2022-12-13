@@ -22,7 +22,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 include_directories(${PROJECT_NAME}  ${PROJECT_SOURCE_DIR}/include/ ${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} )
 
-set(SOURCE_FILES src/main.cpp src/attributes.cpp src/chapter.cpp src/chest.cpp src/choice.cpp src/consumable.cpp
+set(SOURCE_FILES src/main.cpp src/attributes.cpp src/chapter.cpp src/itemrepository.cpp src/choice.cpp src/consumable.cpp
 src/game.cpp src/interaction.cpp src/inventory.cpp src/item.cpp src/player.cpp src/render.cpp src/scene.cpp src/tinyxml2.cpp src/weapon.cpp src/gamestatemanager.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -50,7 +50,7 @@ enable_testing()
 set(TESTS tests/gtest-player.cpp tests/gtest-story.cpp tests/gtest-SaveLoad.cpp )
 add_executable(test_sajat ${TESTS})
 
-set(SOURCE_FILES_TEST src/attributes.cpp src/chapter.cpp src/chest.cpp src/choice.cpp src/consumable.cpp
+set(SOURCE_FILES_TEST src/attributes.cpp src/chapter.cpp src/itemrepository.cpp src/choice.cpp src/consumable.cpp
  src/inventory.cpp src/item.cpp src/player.cpp src/game.cpp src/scene.cpp src/tinyxml2.cpp src/weapon.cpp src/gamestatemanager.cpp)
 
 
