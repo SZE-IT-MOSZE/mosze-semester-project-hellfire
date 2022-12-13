@@ -2,7 +2,7 @@
 
 int Weapon::getType()
 {
-    return -1;
+    return static_cast<int>(type);
 }
 
 void Weapon::equip()
@@ -17,5 +17,5 @@ void Weapon::dequip()
 
 bool Weapon::isEquipped()
 {
-    return false;
+    return equipped;
 }

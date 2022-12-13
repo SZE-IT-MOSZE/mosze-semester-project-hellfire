@@ -11,11 +11,13 @@ class Weapon : public Item
         void equip();
         void dequip();
         bool isEquipped();
+        Weapon(std::string artText, std::string typeText);
 
     protected:
 
     private:
         WeaponType type;
+        std::string art;
         bool equipped;
 };
 
