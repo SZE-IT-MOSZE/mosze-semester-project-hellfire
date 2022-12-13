@@ -14,6 +14,7 @@ class Player
         int getSkillPoints();
         void setExperience(int amount);
         int getExperience();
+        char* determineCorruptionArt();
         Player();
         Player(int skillPoints, int experience, Attributes* attributes);
         ~Player();

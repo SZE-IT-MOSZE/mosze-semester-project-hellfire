@@ -44,6 +44,25 @@ void Player::setExperience(int amount)
     experience += amount;
 }
 
+char* Player::determineCorruptionArt() {
+    int corruption = attributes->getCorruption();
+    if(corruption >= -1  && corruption <= 1) {
+        return "assets/Necklace_half.bmp";
+    }
+    else if(corruption == 2 || corruption  == 3) {
+        return "assets/Necklace_twothird.bmp";
+    }
+    else if(corruption > 3) {
+        return "assets/Necklace_black2.bmp";
+    }
+    else if(corruption == -2 || corruption == -3) {
+         return "assets/Necklace_onethird.bmp";
+    }
+    else {
+         return "assets/Necklace.bmp";
+    }
+}
+
 Player::~Player()
 {
     delete attributes;
