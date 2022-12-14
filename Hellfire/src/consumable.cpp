@@ -2,20 +2,35 @@
 
 int Consumable::getType()
 {
-    return -1;
+    return static_cast<int>(type);
+}
+
+std::string Consumable::getArt() {
+    if(charges == 3) {
+        return art + "-full.bmp";
+    } else if(charges == 2) {
+        return art + "-twothird.bmp";
+    }
+    else if(charges == 1) {
+        return art + "-half.bmp";
+    }
+    else {
+        return art + "-empty.bmp";
+    }
 }
 
 int Consumable::getCharges()
 {
-    return -1;
+    return charges;
 }
 
 bool Consumable::isEmpty()
 {
-    return false;
+    return charges == 0;
 }
 
-void Consumable::use()
+void Consumable::use(Player* player)
 {
-
+    if(isEmpty())
+        return;
 }
