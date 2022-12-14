@@ -185,7 +185,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
     bool selected[3] = {true, false, false};
     Attributes* playerAttributes = player->getAttributes();
-    SDL_Surface* corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+    SDL_Surface* corruptionArt = SDL_LoadBMP(player->determineCorruptionArt().c_str());
     std::string skillPointsText = "Szabad skill pontok: " + std::to_string(player->getSkillPoints());
     SDL_Surface* skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
 
@@ -323,7 +323,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
                     corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
 
-                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt().c_str());
 
                     Render::renderSurface(corruptionArt, img_pos);
                     Render::renderSurface(skillPoints, titlePos);
@@ -361,7 +361,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
                     skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
                     corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
-                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt().c_str());
 
                     Render::renderSurface(corruptionArt, img_pos);
                     for(int i = 0; i < 3; i++)
@@ -408,7 +408,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     persuasion = TTF_RenderUTF8_Solid(font, persuasionText.c_str(), color[0]);
                     skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
                     corruption = TTF_RenderUTF8_Solid(font, corruptionText.c_str(), color[0]);
-                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt());
+                    corruptionArt = SDL_LoadBMP(player->determineCorruptionArt().c_str());
 
                     Render::renderSurface(corruptionArt, img_pos);
                     for(int i = 0; i < 3; i++)
