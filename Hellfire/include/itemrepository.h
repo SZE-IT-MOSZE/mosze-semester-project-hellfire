@@ -2,17 +2,19 @@
 #define ITEMREPOSITORY_H
 
 #include "weapon.h"
+#include "item.h"
 #include "consumable.h"
 #include "tinyxml2.h"
+#include <random>
 
 class ItemRepository
 {
     public:
-         std::vector<Weapon*> choices;
-         std::vector<Consumable*> consumables;
+        Item* getRandomItem();
+        ItemRepository();
     private:
-       void loadConsumablesFromXML();
-       void loadWeaponsFromXML();
+       Consumable* loadRandomConsumableFromXML();
+       Weapon* loadRandomWeaponFromXML();
 };
 
 #endif // ITEMREPOSITORY_H
