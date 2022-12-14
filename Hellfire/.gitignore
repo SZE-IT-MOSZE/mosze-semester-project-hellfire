@@ -1,0 +1,5 @@
+*.layout
+*.depend
+obj/
+*.png
+build/
