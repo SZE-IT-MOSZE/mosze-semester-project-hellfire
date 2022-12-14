@@ -14,7 +14,7 @@ class Player
         int getSkillPoints();
         void setExperience(int amount);
         int getExperience();
-        char* determineCorruptionArt();
+        std::string determineCorruptionArt();
         Player();
         Player(int skillPoints, int experience, Attributes* attributes);
         ~Player();

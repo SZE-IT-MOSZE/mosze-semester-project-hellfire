@@ -44,7 +44,7 @@ void Player::setExperience(int amount)
     experience += amount;
 }
 
-char* Player::determineCorruptionArt() {
+std::string Player::determineCorruptionArt() {
     int corruption = attributes->getCorruption();
     if(corruption >= -1  && corruption <= 1) {
         return "assets/Necklace_half.bmp";
