@@ -1,4 +1,5 @@
 #include "attributes.h"
+#include "enums.h"
 
 using namespace std;
 
@@ -56,3 +57,4 @@ void Attributes::setCorruption(int amount)
 {
     corruptionLevel += amount;
 }
+
