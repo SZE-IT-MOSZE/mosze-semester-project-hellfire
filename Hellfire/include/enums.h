@@ -19,6 +19,7 @@ inline const char* getChoiceTypeText(ChoiceType tp) {
     }
 }
 
+
 enum class ConsumableType
 {
     Strength,
@@ -26,10 +27,30 @@ enum class ConsumableType
     Persuasion
 };
 
+inline const char* getConsumableTypeText(int tp) {
+
+    switch(tp) {
+        case static_cast<int>(ConsumableType::Strength): return "str";
+        case static_cast<int>(ConsumableType::Intelligence): return "int";
+        case static_cast<int>(ConsumableType::Persuasion): return "per";
+        default: return "";
+    }
+}
+
 enum class WeaponType
 {
     Staff, Sword
 };
+
+inline const char* getWeaponTypeText(int tp) {
+
+    switch(tp) {
+        case static_cast<int>(WeaponType::Sword): return "sword";
+        case static_cast<int>(WeaponType::Staff): return "staff";
+        default: return "";
+    }
+}
+
 
 enum class MenuOptions : int {
     NEW_GAME = 0, LOAD_GAME = 1, EXIT_GAME = 2
