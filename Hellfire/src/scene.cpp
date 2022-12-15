@@ -24,6 +24,16 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
     Attributes* playerAttributes = player->getAttributes();
     int randomFactor = d20numberGenerator();
     int choiceDiff = chosenChoice->getDifficulty();
+    Weapon* playerWeapon = player->getEquippedWeapon();
+    int weaponType = -1;
+    int weaponBuff = 0;
+    if(playerWeapon != nullptr) {
+            std::cout << "i run" << std::endl;
+        weaponType = playerWeapon->getType();
+        weaponBuff = playerWeapon->getEffectiveness();
+    }
+    int buffType = player->getBuffType();
+    int buff = player->getBuff();
 
     if(chosenChoice -> getType() == static_cast<int>(ChoiceType::Default))
     {
@@ -34,13 +44,19 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
 
     if(choiceType == static_cast<int>(ChoiceType::Strength))
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getStrength())
+        int strength = playerAttributes->getStrength();
+        if(buffType == static_cast<int>(ConsumableType::Strength))
+            strength += buff;
+        if(weaponType == static_cast<int>(WeaponType::Sword))
+            strength += weaponBuff;
+
+        if(randomFactor == 20 && choiceDiff / 2 <= strength)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getStrength())
+        else if(choiceDiff <= strength)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
@@ -55,13 +71,18 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
 
     else if(choiceType == static_cast<int>(ChoiceType::Intelligence))
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getIntelligence())
+        int intelligence = playerAttributes->getIntelligence();
+        if(buffType == static_cast<int>(ConsumableType::Intelligence))
+            intelligence += buff;
+        if(weaponType == static_cast<int>(WeaponType::Staff))
+            intelligence += weaponBuff;
+        if(randomFactor == 20 && choiceDiff / 2 <= intelligence)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getIntelligence())
+        else if(choiceDiff <= intelligence)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
@@ -75,13 +96,16 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
     }
     else
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getPersuasion())
+        int persuasion = playerAttributes->getPersuasion();
+        if(buffType == static_cast<int>(ConsumableType::Persuasion))
+            persuasion += buff;
+        if(randomFactor == 20 && choiceDiff / 2 <= persuasion)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getPersuasion())
+        else if(choiceDiff <= persuasion)
         {
             player->setExperience(chosenChoice->getExperience());
             playerAttributes->setCorruption(chosenChoice->getCorruption());
@@ -97,17 +121,13 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
 
 void Scene::chooseChoice(Choice* chosenChoice, Player* player)
 {
-    std::cout << "Type: " << chosenChoice->getType() << std::endl;
-    std::cout << "Diff: " << chosenChoice->getDifficulty() << std::endl;
-    std::cout << "Exp: "<< chosenChoice->getExperience() << std::endl;
-    std::cout << "Cpn: " << chosenChoice->getCorruption() << std::endl << std::endl;
-
     if(chosenChoice -> isFailed())
     {
         return;
     }
 
     attributeCheck(chosenChoice, player);
+    player->removeBuff();
 }
 
 std::string Scene::getArt()
