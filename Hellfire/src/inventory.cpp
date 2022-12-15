@@ -1,22 +1,36 @@
 #include "inventory.h"
+#include <algorithm>
 
-
-void Inventory::addItem(Item& item)
+void Inventory::addItem(Item* itemToAdd)
 {
-
+    items.push_back(itemToAdd);
 }
 
-void Inventory::deleteItem(std::string name)
+void Inventory::deleteItem(Item* itemToDelete)
 {
-
+    std::vector<Item*>::iterator it = std::find(items.begin(), items.end(), itemToDelete);
+    if(it != items.end()) {
+        items.erase(it);
+        delete itemToDelete;
+    }
 }
 
-std::vector<Item>& Inventory::getItems()
+std::vector<Item*>& Inventory::getItems()
 {
     return items;
 }
 
-Item& Inventory::selectedItem(std::string name)
-{
-    //return &selectedItem;
+int Inventory::getItemsCount() {
+    return items.size();
+}
+
+Inventory::Inventory() {};
+
+Inventory::~Inventory() {
+
+    for (auto item : items)
+    {
+        delete item;
+    }
+    items.clear();
 }

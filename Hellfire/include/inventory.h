@@ -6,15 +6,14 @@
 class Inventory
 {
     public:
-        void addItem(Item& item);
-        void deleteItem(std::string name);
-        std::vector<Item>& getItems();
-        Item& selectedItem(std::string name);
-
-    protected:
-
+        void addItem(Item* itemToAdd);
+        void deleteItem(Item* itemToDelete);
+        std::vector<Item*>& getItems();
+        int getItemsCount();
+        Inventory();
+        ~Inventory();
     private:
-        std::vector<Item> items;
+        std::vector<Item*> items;
 };
 
 #endif // INVENTORY_H
