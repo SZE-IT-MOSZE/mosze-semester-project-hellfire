@@ -11,6 +11,7 @@ class Consumable : public Item
     public:
         int getType() override;
         std::string getArt() override;
+        std::string getBaseArt();
         int getCharges();
         bool isEmpty();
         void use(Player* player);

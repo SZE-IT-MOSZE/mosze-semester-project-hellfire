@@ -7,16 +7,20 @@ int Consumable::getType()
 
 std::string Consumable::getArt() {
     if(charges == 3) {
-        return art + "-full.bmp";
+        return "assets/" + art + "-full.bmp";
     } else if(charges == 2) {
-        return art + "-twothird.bmp";
+        return "assets/" + art + "-twothird.bmp";
     }
     else if(charges == 1) {
-        return art + "-half.bmp";
+        return "assets/" + art + "-half.bmp";
     }
     else {
-        return art + "-empty.bmp";
+        return "assets/" + art + "-empty.bmp";
     }
+}
+
+std::string Consumable::getBaseArt() {
+    return art;
 }
 
 int Consumable::getCharges()
@@ -33,4 +37,7 @@ void Consumable::use(Player* player)
 {
     if(isEmpty())
         return;
+    player->applyBuff(effectiveness, static_cast<int>(type));
+    charges--;
 }
+
