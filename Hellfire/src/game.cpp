@@ -6,6 +6,7 @@
 #include "interaction.h"
 #include "weapon.h"
 #include "gamestatemanager.h"
+#include "itemrepository.h"
 
 const char* Game::GAME_TITLE = "MOrdor'S Zealous Enmity: A Lord of the Rings story";
 
@@ -15,15 +16,18 @@ Player* Game::player = nullptr;
 
 Game::Game() { }
 
-void Game::saveGame() {
+void Game::saveGame()
+{
     GameStateManager stateManager;
     stateManager.saveGameStateToXML("gameState.xml", player, actualChapter->getOrder(), actualChapter->getSceneIndex(), &actualChapter->getActScene()->getChoices());
 }
 
-bool Game::loadGame() {
+bool Game::loadGame()
+{
     GameStateManager stateManager;
     bool result = stateManager.loadGameStateFromXML("gameState.xml", player, actualChapter);
-    if(result) {
+    if(result)
+    {
         player = stateManager.getPlayerState();
         actualChapter = stateManager.getChapterState();
     }
@@ -76,8 +80,9 @@ int Game::openInGameMenu(TTF_Font* font)
                           background->w, background->h
                        };
     SDL_Rect pos_title =  {Render::WIDTH / 2 - title->clip_rect.w/2,
-                          Render::HEIGHT / 4 - title->clip_rect.h,
-                         title->w, title->h};
+                           Render::HEIGHT / 4 - title->clip_rect.h,
+                           title->w, title->h
+                          };
 
     Render::renderSurface(background, pos_img);
     Render::renderSurface(title, pos_title);
@@ -174,9 +179,472 @@ int Game::openInGameMenu(TTF_Font* font)
     return -1;
 }
 
-void Game::openInventory()
+void Game::openInventory(TTF_Font* font)
 {
+    SDL_RenderClear(Render::renderer);
 
+    Inventory* playerInventory = player->getInventory();
+    std::vector<Item*>& items = playerInventory->getItems();
+    int actPage = 1;
+    int actItemIndex = 0;
+    bool selected[playerInventory->getItemsCount() - 1];
+    selected[0] = true;
+    for(int i = 1; i < playerInventory->getItemsCount(); i++)
+    {
+        selected[i] = false;
+    }
+    SDL_Color color = {255,255,255};
+    SDL_Surface* details[4][2];
+    for(int i = 0; i < 4 && i < playerInventory->getItemsCount(); i++)
+    {
+        Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+        std::string detailTop = "";
+        std::string detailBottom = "Effectiveness: ";
+        if(potion != nullptr)
+        {
+            detailTop += potion->getName();
+            detailBottom += std::to_string(potion->getEffectiveness()) +
+                            "      "
+                            + "Charges: " + std::to_string(potion->getCharges());
+            details[i][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+            details[i][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+        }
+        else if(weapon != nullptr)
+        {
+            detailTop += weapon->getName();
+            detailBottom += std::to_string(weapon->getEffectiveness());
+            details[i][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+            details[i][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+        }
+    }
+
+    int baseHeight = 120;
+    SDL_Rect pos_details[4][2];
+    SDL_Rect pos_frames[4] =  { {
+            30,
+            baseHeight,
+            900, 100
+        },
+        {
+            30,
+            baseHeight + 130,
+            900, 100
+        },
+        {
+            30,
+            baseHeight + 2*130,
+            900, 100
+        },
+        {
+            30,
+            baseHeight + 3*130,
+            900, 100
+        }
+    };
+    SDL_Rect pos_imgs[4] = { {
+            80,
+            baseHeight + 18,
+            64, 64
+        },
+        {
+            80,
+            baseHeight + 148,
+            64, 64
+        },
+        {
+            80,
+            baseHeight + 2*130 + 18,
+            64, 64
+        },
+        {
+            80,
+            baseHeight +  3*130 + 18,
+            64, 64
+        }
+    };
+
+    for(int i = 0; i < 4 && i < playerInventory->getItemsCount(); i++)
+    {
+        pos_details[i][0] =
+        {
+            200,
+            baseHeight + 18 + i * 130,
+            details[i][0]->w, details[i][0]->h
+        };
+        pos_details[i][1] =
+        {
+            200,
+            baseHeight + 46 + i * 130,
+            details[i][1]->w, details[i][1]->h
+        };
+    }
+
+    SDL_Surface* title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
+    SDL_Rect pos_title =  {Render::WIDTH / 2 - title->clip_rect.w/2,
+                           Render::HEIGHT / 8 - title->clip_rect.h,
+                           title->w, title->h
+                          };
+    std::string pageIndicatorText = std::to_string(actPage) + "/";
+    if(playerInventory->getItemsCount() == 0)
+    {
+        pageIndicatorText += "1";
+    }
+    else
+    {
+        pageIndicatorText += std::to_string((playerInventory->getItemsCount() / 4 + (playerInventory->getItemsCount() % 4 != 0)));
+    }
+    SDL_Surface* pageIndicator = TTF_RenderUTF8_Solid(font, pageIndicatorText.c_str(), color);
+    SDL_Rect pos_pageIndicator =  {Render::WIDTH - pageIndicator->clip_rect.w * 2,
+                                   Render::HEIGHT - pageIndicator->clip_rect.h * 2,
+                                   pageIndicator->w, pageIndicator->h
+                                  };
+
+    Render::renderSurface(title, pos_title);
+    Render::renderSurface(pageIndicator, pos_pageIndicator);
+
+
+    SDL_Surface* inventoryItemFrame = nullptr;
+    SDL_Surface* selectedInventoryItemFrame = nullptr;
+    SDL_Surface* inventoryItemIcon = nullptr;
+
+    for(int i = (actPage - 1) * 4; i < 4 && i < playerInventory->getItemsCount(); i++)
+    {
+        inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+        if(i == 0)
+        {
+            selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
+            Render::renderSurface(selectedInventoryItemFrame, pos_frames[i]);
+        }
+        else
+        {
+            inventoryItemFrame = SDL_LoadBMP("assets/frame.bmp");
+            Render::renderSurface(inventoryItemFrame, pos_frames[i]);
+        }
+        Render::renderSurface(inventoryItemIcon, pos_imgs[i]);
+        Render::renderSurface(details[i][0], pos_details[i][0]);
+        Render::renderSurface(details[i][1], pos_details[i][1]);
+    }
+    Uint32 time;
+    SDL_Event event;
+    while(true)
+    {
+        time=SDL_GetTicks();
+        if(SDL_PollEvent(&event))
+        {
+            switch(event.type)
+            {
+            case SDL_QUIT:
+                return;
+            case SDL_KEYDOWN:
+                if(SDLK_i == event.key.keysym.sym)
+                {
+                    return;
+                }
+                else if(SDLK_UP == event.key.keysym.sym)
+                {
+                    if(actItemIndex > 0 && playerInventory->getItemsCount() > 0)
+                    {
+                        SDL_RenderClear(Render::renderer);
+                        actItemIndex--;
+                        selected[actItemIndex] = true;
+                        selected[actItemIndex + 1] = false;
+                        actPage = (actItemIndex + 1) / 4 + ((actItemIndex + 1) % 4 != 0);
+                        title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
+                        std::string pageIndicatorText = std::to_string(actPage) + "/"
+                                                        + std::to_string((playerInventory->getItemsCount() / 4 + (playerInventory->getItemsCount() % 4 != 0)));
+                        pageIndicator = TTF_RenderUTF8_Solid(font, pageIndicatorText.c_str(), color);
+
+                        Render::renderSurface(title, pos_title);
+                        Render::renderSurface(pageIndicator, pos_pageIndicator);
+
+                        for(int i = (actPage - 1) * 4; i < (4 + (actPage - 1) * 4) && i < playerInventory->getItemsCount(); i++)
+                        {
+                            Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+                            Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                            std::string detailTop = "";
+                            std::string detailBottom = "Effectiveness: ";
+                            if(potion != nullptr)
+                            {
+                                detailTop += potion->getName();
+                                detailBottom += std::to_string(potion->getEffectiveness()) +
+                                                "      "
+                                                + "Charges: " + std::to_string(potion->getCharges());
+                                details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                                details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                            }
+                            else if(weapon != nullptr)
+                            {
+                                detailTop += weapon->getName();
+                                detailBottom += std::to_string(weapon->getEffectiveness());
+                                details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                                details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                            }
+                            pos_details[i - 4 * (actPage - 1)][0] =
+                            {
+                                200,
+                                baseHeight + 18 + (i - 4 * (actPage - 1)) * 130,
+                                details[i - 4 * (actPage - 1)][0]->w, details[i - 4 * (actPage - 1)][0]->h
+                            };
+                            pos_details[i - 4 * (actPage - 1)][1] =
+                            {
+                                200,
+                                baseHeight + 46 + (i - 4 * (actPage - 1)) * 130,
+                                details[i - 4 * (actPage - 1)][1]->w, details[i - 4 * (actPage - 1)][1]->h
+                            };
+                            inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+                            if(selected[i])
+                            {
+                                selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
+                                Render::renderSurface(selectedInventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                            }
+                            else
+                            {
+                                inventoryItemFrame = SDL_LoadBMP("assets/frame.bmp");
+                                Render::renderSurface(inventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                            }
+                            Render::renderSurface(inventoryItemIcon, pos_imgs[i - 4 * (actPage - 1)]);
+                            Render::renderSurface(details[i - 4 * (actPage - 1)][0], pos_details[i - 4 * (actPage - 1)][0]);
+                            Render::renderSurface(details[i - 4 * (actPage - 1)][1], pos_details[i - 4 * (actPage - 1)][1]);
+                        }
+                    }
+                }
+
+                else if(SDLK_DOWN == event.key.keysym.sym)
+                {
+                    if(actItemIndex < playerInventory->getItemsCount() - 1)
+                    {
+                        SDL_RenderClear(Render::renderer);
+                        actItemIndex++;
+                        selected[actItemIndex] = true;
+                        selected[actItemIndex - 1] = false;
+                        actPage = (actItemIndex + 1) / 4 + ((actItemIndex + 1) % 4 != 0);
+                        title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
+                        std::string pageIndicatorText = std::to_string(actPage) + "/"
+                                                        + std::to_string((playerInventory->getItemsCount() / 4 + (playerInventory->getItemsCount() % 4 != 0)));
+                        pageIndicator = TTF_RenderUTF8_Solid(font, pageIndicatorText.c_str(), color);
+
+                        Render::renderSurface(title, pos_title);
+                        Render::renderSurface(pageIndicator, pos_pageIndicator);
+
+                        for(int i = (actPage - 1) * 4; i < (4 + (actPage - 1) * 4) && i < playerInventory->getItemsCount(); i++)
+                        {
+                            Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+                            Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                            std::string detailTop = "";
+                            std::string detailBottom = "Effectiveness: ";
+                            if(potion != nullptr)
+                            {
+                                detailTop += potion->getName();
+                                detailBottom += std::to_string(potion->getEffectiveness()) +
+                                                "      "
+                                                + "Charges: " + std::to_string(potion->getCharges());
+                                details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                                details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                            }
+                            else if(weapon != nullptr)
+                            {
+                                detailTop += weapon->getName();
+                                detailBottom += std::to_string(weapon->getEffectiveness());
+                                details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                                details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                            }
+                            pos_details[i - 4 * (actPage - 1)][0] =
+                            {
+                                200,
+                                baseHeight + 18 + (i - 4 * (actPage - 1)) * 130,
+                                details[i - 4 * (actPage - 1)][0]->w, details[i - 4 * (actPage - 1)][0]->h
+                            };
+                            pos_details[i - 4 * (actPage - 1)][1] =
+                            {
+                                200,
+                                baseHeight + 46 + (i - 4 * (actPage - 1)) * 130,
+                                details[i - 4 * (actPage - 1)][1]->w, details[i - 4 * (actPage - 1)][1]->h
+                            };
+                            inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+                            if(selected[i])
+                            {
+                                selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
+                                Render::renderSurface(selectedInventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                            }
+                            else
+                            {
+                                inventoryItemFrame = SDL_LoadBMP("assets/frame.bmp");
+                                Render::renderSurface(inventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                            }
+                            Render::renderSurface(inventoryItemIcon, pos_imgs[i - 4 * (actPage - 1)]);
+                            Render::renderSurface(details[i - 4 * (actPage - 1)][0], pos_details[i - 4 * (actPage - 1)][0]);
+                            Render::renderSurface(details[i - 4 * (actPage - 1)][1], pos_details[i - 4 * (actPage - 1)][1]);
+                        }
+                    }
+                }
+               else if(SDLK_f == event.key.keysym.sym) {
+                  for(int i = 0; i < playerInventory->getItemsCount(); i++) {
+                    if(selected[i]) {
+                        Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+                        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                        if(potion != nullptr) {
+                            potion->use(player);
+                        }
+                        if(weapon != nullptr) {
+                            player->setEquippedWeapon(weapon);
+                        }
+                        break;
+                    }
+                  }
+                    SDL_RenderClear(Render::renderer);
+                    title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
+                    std::string pageIndicatorText = std::to_string(actPage) + "/";
+                    if(playerInventory->getItemsCount() == 0)
+                    {
+                        pageIndicatorText += "1";
+                    }
+                    else
+                    {
+                        pageIndicatorText += std::to_string((playerInventory->getItemsCount() / 4 + (playerInventory->getItemsCount() % 4 != 0)));
+                    }
+                    pageIndicator = TTF_RenderUTF8_Solid(font, pageIndicatorText.c_str(), color);
+
+                    Render::renderSurface(title, pos_title);
+                    Render::renderSurface(pageIndicator, pos_pageIndicator);
+
+                    for(int i = (actPage - 1) * 4; i < (4 + (actPage - 1) * 4) && i < playerInventory->getItemsCount(); i++)
+                    {
+                        Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+                        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                        std::string detailTop = "";
+                        std::string detailBottom = "Effectiveness: ";
+                        if(potion != nullptr)
+                        {
+                            detailTop += potion->getName();
+                            detailBottom += std::to_string(potion->getEffectiveness()) +
+                                            "      "
+                                            + "Charges: " + std::to_string(potion->getCharges());
+                            details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                            details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                        }
+                        else if(weapon != nullptr)
+                        {
+                            detailTop += weapon->getName();
+                            detailBottom += std::to_string(weapon->getEffectiveness());
+                            details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                            details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                        }
+                        pos_details[i - 4 * (actPage - 1)][0] =
+                        {
+                            200,
+                            baseHeight + 18 + (i - 4 * (actPage - 1)) * 130,
+                            details[i - 4 * (actPage - 1)][0]->w, details[i - 4 * (actPage - 1)][0]->h
+                        };
+                        pos_details[i - 4 * (actPage - 1)][1] =
+                        {
+                            200,
+                            baseHeight + 46 + (i - 4 * (actPage - 1)) * 130,
+                            details[i - 4 * (actPage - 1)][1]->w, details[i - 4 * (actPage - 1)][1]->h
+                        };
+                        inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+                        if(selected[i])
+                        {
+                            selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
+                            Render::renderSurface(selectedInventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                        }
+                        else
+                        {
+                            inventoryItemFrame = SDL_LoadBMP("assets/frame.bmp");
+                            Render::renderSurface(inventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                        }
+                        Render::renderSurface(inventoryItemIcon, pos_imgs[i - 4 * (actPage - 1)]);
+                        Render::renderSurface(details[i - 4 * (actPage - 1)][0], pos_details[i - 4 * (actPage - 1)][0]);
+                        Render::renderSurface(details[i - 4 * (actPage - 1)][1], pos_details[i - 4 * (actPage - 1)][1]);
+                    }
+               }
+               else if(SDLK_d == event.key.keysym.sym) {
+                  actPage = 1;
+                  for(int i = 0; i < playerInventory->getItemsCount(); i++) {
+                    if(selected[i]) {
+                        selected[i] = false;
+                        selected[0] = true;
+                        actItemIndex = 0;
+                        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                        if(weapon != nullptr) {
+                            if(weapon->isEquipped()) {
+                                player->setEquippedWeapon(nullptr);
+                            }
+                        }
+                        playerInventory->deleteItem(items[i]);
+                        break;
+                    }
+                  }
+                    SDL_RenderClear(Render::renderer);
+                    title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
+                    std::string pageIndicatorText = std::to_string(actPage) + "/";
+                    if(playerInventory->getItemsCount() == 0)
+                    {
+                        pageIndicatorText += "1";
+                    }
+                    else
+                    {
+                        pageIndicatorText += std::to_string((playerInventory->getItemsCount() / 4 + (playerInventory->getItemsCount() % 4 != 0)));
+                    }
+                    pageIndicator = TTF_RenderUTF8_Solid(font, pageIndicatorText.c_str(), color);
+
+                    Render::renderSurface(title, pos_title);
+                    Render::renderSurface(pageIndicator, pos_pageIndicator);
+
+                    for(int i = (actPage - 1) * 4; i < (4 + (actPage - 1) * 4) && i < playerInventory->getItemsCount(); i++)
+                    {
+                        Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+                        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+                        std::string detailTop = "";
+                        std::string detailBottom = "Effectiveness: ";
+                        if(potion != nullptr)
+                        {
+                            detailTop += potion->getName();
+                            detailBottom += std::to_string(potion->getEffectiveness()) +
+                                            "      "
+                                            + "Charges: " + std::to_string(potion->getCharges());
+                            details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                            details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                        }
+                        else if(weapon != nullptr)
+                        {
+                            detailTop += weapon->getName();
+                            detailBottom += std::to_string(weapon->getEffectiveness());
+                            details[i - 4 * (actPage - 1)][0] =  TTF_RenderUTF8_Solid(font, detailTop.c_str(), color);
+                            details[i - 4 * (actPage - 1)][1] =  TTF_RenderUTF8_Solid(font, detailBottom.c_str(), color);
+                        }
+                        pos_details[i - 4 * (actPage - 1)][0] =
+                        {
+                            200,
+                            baseHeight + 18 + (i - 4 * (actPage - 1)) * 130,
+                            details[i - 4 * (actPage - 1)][0]->w, details[i - 4 * (actPage - 1)][0]->h
+                        };
+                        pos_details[i - 4 * (actPage - 1)][1] =
+                        {
+                            200,
+                            baseHeight + 46 + (i - 4 * (actPage - 1)) * 130,
+                            details[i - 4 * (actPage - 1)][1]->w, details[i - 4 * (actPage - 1)][1]->h
+                        };
+                        inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+                        if(selected[i])
+                        {
+                            selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
+                            Render::renderSurface(selectedInventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                        }
+                        else
+                        {
+                            inventoryItemFrame = SDL_LoadBMP("assets/frame.bmp");
+                            Render::renderSurface(inventoryItemFrame, pos_frames[i - 4 * (actPage - 1)]);
+                        }
+                        Render::renderSurface(inventoryItemIcon, pos_imgs[i - 4 * (actPage - 1)]);
+                        Render::renderSurface(details[i - 4 * (actPage - 1)][0], pos_details[i - 4 * (actPage - 1)][0]);
+                        Render::renderSurface(details[i - 4 * (actPage - 1)][1], pos_details[i - 4 * (actPage - 1)][1]);
+                    }
+               }
+            }
+        }
+    }
+    return;
 }
 
 void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
@@ -193,6 +661,28 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     std::string intelligenceText = "Intelligence: " + std::to_string(playerAttributes->getIntelligence());
     std::string persuasionText = "Persuasion: " + std::to_string(playerAttributes->getPersuasion());
     std::string corruptionText = "Corruption: " + std::to_string(playerAttributes->getCorruption());
+    if(player->hasBuff()) {
+        int type = player->getBuffType();
+        if(type == static_cast<int>(ConsumableType::Strength)) {
+            strengthText += " + " + std::to_string(player->getBuff());
+        }
+        else if(type == static_cast<int>(ConsumableType::Intelligence)) {
+            intelligenceText += " + " + std::to_string(player->getBuff());
+        }
+        else {
+            persuasionText += " + " + std::to_string(player->getBuff());
+        }
+    }
+    Weapon* playerWeapon = player->getEquippedWeapon();
+    if(playerWeapon != nullptr) {
+        int weaponType = playerWeapon->getType();
+        if(weaponType == static_cast<int>(WeaponType::Sword)) {
+             strengthText += " + " + std::to_string(playerWeapon->getEffectiveness());
+        }
+        else {
+            intelligenceText += " + " + std::to_string(playerWeapon->getEffectiveness());
+        }
+    }
 
     SDL_Surface* strength = TTF_RenderUTF8_Solid(font, strengthText.c_str(), color[0]);
     SDL_Surface* intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
@@ -207,13 +697,13 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     };
 
     SDL_Rect img_pos =  {0 + corruptionArt->clip_rect.w,
-                          0 + corruptionArt->clip_rect.h * 3,
-                          corruptionArt->w, corruptionArt->h
-                         };
+                         0 + corruptionArt->clip_rect.h * 3,
+                         corruptionArt->w, corruptionArt->h
+                        };
     SDL_Rect cpnTextPos = {0 + corruptionArt->clip_rect.w,
-                          0 + corruptionArt->clip_rect.h * 4,
-                          corruption->w, corruption->h
-                         };
+                           0 + corruptionArt->clip_rect.h * 4,
+                           corruption->w, corruption->h
+                          };
 
     SDL_Rect titlePos =  {Render::WIDTH / 2 - skillPoints->clip_rect.w/2,
                           Render::HEIGHT / 4 - skillPoints->clip_rect.h,
@@ -317,6 +807,27 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     intelligenceText = "Intelligence: " + std::to_string(playerAttributes->getIntelligence());
                     persuasionText = "Persuasion: " + std::to_string(playerAttributes->getPersuasion());
                     corruptionText = "Corruption: " + std::to_string(playerAttributes->getCorruption());
+                    if(player->hasBuff()) {
+                        int type = player->getBuffType();
+                        if(type == static_cast<int>(ConsumableType::Strength)) {
+                            strengthText += " + " + std::to_string(player->getBuff());
+                        }
+                        else if(type == static_cast<int>(ConsumableType::Intelligence)) {
+                            intelligenceText += " + " + std::to_string(player->getBuff());
+                        }
+                        else {
+                            persuasionText += " + " + std::to_string(player->getBuff());
+                        }
+                    }
+                    if(playerWeapon != nullptr) {
+                        int weaponType = playerWeapon->getType();
+                        if(weaponType == static_cast<int>(WeaponType::Sword)) {
+                             strengthText += " + " + std::to_string(playerWeapon->getEffectiveness());
+                        }
+                        else {
+                            intelligenceText += " + " + std::to_string(playerWeapon->getEffectiveness());
+                        }
+                    }
 
                     strength = TTF_RenderUTF8_Solid(font, strengthText.c_str(), color[0]);
                     intelligence = TTF_RenderUTF8_Solid(font, intelligenceText.c_str(), color[0]);
@@ -501,7 +1012,7 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
         switch(event.type)
         {
         case SDL_QUIT:
-            return -1;
+            return static_cast<int>(MenuOptions::EXIT_GAME);
         case SDL_KEYDOWN:
             if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
             {
@@ -578,6 +1089,8 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
     SDL_Surface* title = TTF_RenderUTF8_Solid(titleFont, "Fejezet vége", color[0]);
 
+    ItemRepository itemRepository;
+
     int playerExperience = player->getExperience();
     std::string experienceBeforeConvertText = "Experience pontok átváltás előtt: " + std::to_string(playerExperience) + " exp";
     std::string experienceAfterConvertText = "Experience pontok átváltás után: " + std::to_string(playerExperience - (playerExperience / 100 * 100)) + " exp";
@@ -586,12 +1099,13 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
     SDL_Surface* experienceBeforeConvert = TTF_RenderUTF8_Solid(font, experienceBeforeConvertText.c_str(), color[0]);
     SDL_Surface* experienceAfterConvert = TTF_RenderUTF8_Solid(font, experienceAfterConvertText.c_str(), color[0]);
     SDL_Surface* gainedSkillPoints = TTF_RenderUTF8_Solid(font, gainedSkillpointsText.c_str(), color[0]);
+    SDL_Surface* itemDropInfo = TTF_RenderUTF8_Solid(font, "Kaptál 3 itemet, megnézheted őket az inventoryban.", color[0]);
 
     SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
                           Render::HEIGHT / 4 - title->clip_rect.h,
                           title->w, title->h
                          };
-    SDL_Rect pos[3] =  { {
+    SDL_Rect pos[4] =  { {
             Render::WIDTH / 2 - experienceBeforeConvert->clip_rect.w/2,
             Render::HEIGHT / 2 - experienceBeforeConvert->clip_rect.h,
             experienceBeforeConvert->w, experienceBeforeConvert->h
@@ -605,6 +1119,11 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
             Render::WIDTH / 2 - gainedSkillPoints->clip_rect.w/2,
             Render::HEIGHT / 2 + (gainedSkillPoints->clip_rect.h * 3),
             gainedSkillPoints->w, gainedSkillPoints->h
+        },
+        {
+            Render::WIDTH / 2 - itemDropInfo->clip_rect.w/2,
+            Render::HEIGHT - 100,
+            itemDropInfo->w, itemDropInfo->h
         }
     };
 
@@ -613,6 +1132,7 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
     Render::renderSurface(experienceBeforeConvert, pos[0]);
     Render::renderSurface(experienceAfterConvert, pos[1]);
     Render::renderSurface(gainedSkillPoints, pos[2]);
+    Render::renderSurface(itemDropInfo, pos[3]);
 
 
     Uint32 time;
@@ -631,6 +1151,13 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
                 {
                     player->setExperience(-(playerExperience / 100 * 100));
                     player->setSkillPoints(playerExperience / 100);
+                    Inventory* playerInventory = player->getInventory();
+                    for(int i = 0; i < 3; i++)
+                    {
+                        playerInventory->addItem(itemRepository.getRandomItem());
+                    }
+                    std::cout << playerInventory->getItemsCount() << std::endl;
+
                     int prevChapterOrder = actualChapter->getOrder();
                     loadNextChapter(prevChapterOrder + 1);
                     return;
@@ -665,13 +1192,18 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
 
     std::vector<Choice*>& choices =  actScene->getChoices();
     int playerCorruption = player->getAttributes()->getCorruption();
-    if(actualChapter->isLastChapter() && actualChapter->getSceneIndex() == actualChapter->getSceneCount() - 1) {
-        if(playerCorruption <= -3) {
+    if(actualChapter->isLastChapter() && actualChapter->getSceneIndex() == actualChapter->getSceneCount() - 1)
+    {
+        if(playerCorruption <= -3)
+        {
             choices = std::vector<Choice*>({actScene->getChoices()[0]});
         }
-        else if(playerCorruption >= 2) {
+        else if(playerCorruption >= 2)
+        {
             choices = std::vector<Choice*>({actScene->getChoices()[3]});
-        } else {
+        }
+        else
+        {
             choices = std::vector<Choice*>({actScene->getChoices()[2]});
         }
     }
@@ -774,7 +1306,7 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
             switch(event.type)
             {
             case SDL_QUIT:
-                return -1;
+                return -10;
             case SDL_KEYDOWN:
                 if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
@@ -789,7 +1321,8 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                             }
                             if (choices[i]->getStep() == 0)
                             {
-                                if(actualChapter->isLastChapter()) {
+                                if(actualChapter->isLastChapter())
+                                {
                                     return -10;
                                 }
                                 openInterludeWindow(font, storyFont);
@@ -894,6 +1427,66 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                 else if(SDLK_j == event.key.keysym.sym)
                 {
                     openAttribueWindow(storyFont, font);
+                    SDL_RenderClear(Render::renderer);
+                    background = SDL_LoadBMP(actScene->getArt().c_str());
+                    dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
+                    story = TTF_RenderUTF8_Solid_Wrapped(storyFont, actualChapter->getActScene()->getStorybit().c_str(), color[0], Render::WIDTH - 50);
+                    Render::renderSurface(background, pos_img);
+                    Render::renderSurface(dialogFrame, pos_frame);
+                    if(actualChapter->getSceneIndex() == 0 && actualChapter->getOrder() > 1)
+                    {
+
+                        SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
+                        SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                              Render::HEIGHT / 4 - title->clip_rect.h,
+                                              title->w, title->h
+                                             };
+
+                        Render::renderSurface(title, titlePos);
+
+                    }
+                    else if(actualChapter->getOrder() == 1 && actualChapter->getSceneIndex() == 1)
+                    {
+                        SDL_Surface* title = TTF_RenderUTF8_Solid(font, actualChapter->getTitle().c_str(), color[0]);
+
+                        SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                                              Render::HEIGHT / 4 - title->clip_rect.h,
+                                              title->w, title->h
+                                             };
+
+                        Render::renderSurface(title, titlePos);
+                    }
+
+                    Render::renderSurface(story, storyPos);
+                    for(int i = 0; i < choices.size(); i++)
+                    {
+                        std::string text = std::to_string(i + 1) + ". " + choices[i]->getText();
+                        if(choices[i]->getType() != static_cast<int>(ChoiceType::Default))
+                        {
+                            text += " (" +  std::to_string(choices[i]->getDifficulty()) + " " +
+                                    getChoiceTypeText(static_cast<ChoiceType>(choices[i]->getType())) + ")";
+                        }
+
+                        if(choices[i]->isFailed())
+                        {
+                            text += " [Failed]";
+                        }
+                        if(selected[i])
+                        {
+                            choiceMenu[i] = TTF_RenderUTF8_Solid_Wrapped(storyFont, text.c_str(), color[1], Render::WIDTH - 100);
+                            Render::renderSurface(choiceMenu[i], choiceMenuPos[i]);
+                        }
+                        else
+                        {
+                            choiceMenu[i] = TTF_RenderUTF8_Solid_Wrapped(storyFont, text.c_str(), color[0], Render::WIDTH - 100);
+                            Render::renderSurface(choiceMenu[i], choiceMenuPos[i]);
+                        }
+                    }
+                }
+                else if(SDLK_i == event.key.keysym.sym)
+                {
+                    openInventory(font);
                     SDL_RenderClear(Render::renderer);
                     background = SDL_LoadBMP(actScene->getArt().c_str());
                     dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
