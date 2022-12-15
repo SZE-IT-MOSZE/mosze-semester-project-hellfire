@@ -5,7 +5,22 @@ int Weapon::getType()
     return static_cast<int>(type);
 }
 
+std::string Weapon::getName() {
+    if(equipped) {
+        return name + " [Equipped]";
+    }
+    return name;
+}
+
+std::string Weapon::getBaseName() {
+    return name;
+}
+
 std::string Weapon::getArt() {
+    return "assets/" + art;
+}
+
+std::string Weapon::getBaseArt() {
     return art;
 }
 
@@ -13,6 +28,7 @@ void Weapon::equip()
 {
     if(equipped)
         return;
+
     equipped = true;
 }
 
@@ -26,3 +42,4 @@ bool Weapon::isEquipped()
 {
     return equipped;
 }
+
