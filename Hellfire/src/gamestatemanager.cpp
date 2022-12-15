@@ -1,5 +1,8 @@
 #include "gamestatemanager.h"
 #include <iostream>
+#include <item.h>
+#include <weapon.h>
+#include <consumable.h>
 
 using namespace tinyxml2;
 
@@ -95,9 +98,40 @@ void GameStateManager::saveGameStateToXML(std::string filename, Player* player, 
     insertToXmlElement("intelligence", playerAttributes->getIntelligence(), pPlayer, &xmlState);
     insertToXmlElement("persuasion", playerAttributes->getPersuasion(), pPlayer, &xmlState);
     insertToXmlElement("corruption", playerAttributes->getCorruption(), pPlayer, &xmlState);
+    insertToXmlElement("buff", player->getBuff(), pPlayer, &xmlState);
+    insertToXmlElement("buffType", player->getBuffType(), pPlayer, &xmlState);
+
+    XMLNode * pInventory = xmlState.NewElement("inventory");
+    Inventory* playerInventory = player->getInventory();
+    std::vector<Item*>& items = playerInventory->getItems();
+    for(int i = 0; i < playerInventory->getItemsCount(); i++) {
+        Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
+        Consumable* potion = dynamic_cast<Consumable*>(items[i]);
+        if(weapon != nullptr) {
+            XMLNode* pItem = xmlState.NewElement("item");
+            insertToXmlElement("itemType", "weapon", pItem, &xmlState);
+            insertToXmlElement("isEquipped", weapon->isEquipped(), pItem, &xmlState);
+            insertToXmlElement("type", weapon->getType(), pItem, &xmlState);
+            insertToXmlElement("name", weapon->getBaseName(), pItem, &xmlState);
+            insertToXmlElement("art", weapon->getBaseArt(), pItem, &xmlState);
+            insertToXmlElement("effect", weapon->getEffectiveness(), pItem, &xmlState);
+            pInventory->InsertEndChild(pItem);
+        }
+        else if(potion != nullptr) {
+            XMLNode* pItem = xmlState.NewElement("item");
+            insertToXmlElement("itemType", "consumable", pItem, &xmlState);
+            insertToXmlElement("type", potion->getType(), pItem, &xmlState);
+            insertToXmlElement("name", potion->getName(), pItem, &xmlState);
+            insertToXmlElement("art", potion->getBaseArt(), pItem, &xmlState);
+            insertToXmlElement("charges", potion->getCharges(), pItem, &xmlState);
+            insertToXmlElement("effect", potion->getEffectiveness(), pItem, &xmlState);
+            pInventory->InsertEndChild(pItem);
+        }
+    }
 
     root->InsertEndChild(pChapter);
     root->InsertEndChild(pPlayer);
+    root->InsertEndChild(pInventory);
 
     xmlState.SaveFile(filename.c_str());
 }
@@ -111,6 +145,7 @@ bool GameStateManager::loadGameStateFromXML(std::string filename, Player* player
     XMLElement * root = xmlState.RootElement();
     XMLElement * pChapter = root -> FirstChildElement("chapter");
     XMLElement * pPlayer = root -> FirstChildElement("player");
+    XMLElement * pInventory = root -> FirstChildElement("inventory");
 
     if(chapter != nullptr) {
         delete chapter;
@@ -133,10 +168,39 @@ bool GameStateManager::loadGameStateFromXML(std::string filename, Player* player
     int intelligence = atoi(pPlayer->FirstChildElement("intelligence")->GetText());
     int persuasion = atoi(pPlayer->FirstChildElement("persuasion")->GetText());
     int corruption = atoi(pPlayer->FirstChildElement("corruption")->GetText());
+    int buff = atoi(pPlayer->FirstChildElement("buff")->GetText());
+    int buffType = atoi(pPlayer->FirstChildElement("buffType")->GetText());
 
     Attributes* attributes = new Attributes(strength, intelligence, persuasion, corruption);
 
-    playerState = new Player(skillPoints, experience, attributes);
+    Inventory* inventory = new Inventory();
+    Weapon* equippedWeapon = nullptr;
+    for (XMLElement* pItem = pInventory->FirstChildElement(); pItem != NULL; pItem = pItem->NextSiblingElement()) {
+        std::string itemType = pItem->FirstChildElement("itemType")->GetText();
+        if(itemType == "weapon") {
+           bool equipped = atoi(pItem->FirstChildElement("isEquipped")->GetText());
+           int type = atoi(pItem->FirstChildElement("type")->GetText());
+           std::string name = pItem->FirstChildElement("name")->GetText();
+           std::string art = pItem->FirstChildElement("art")->GetText();
+           int effect = atoi(pItem->FirstChildElement("effect")->GetText());
+           Weapon* actWeapon = new Weapon(name, art, getWeaponTypeText(type), effect);
+           if(equipped) {
+            equippedWeapon = actWeapon;
+           }
+           inventory->addItem(actWeapon);
+        }
+        else if(itemType == "consumable") {
+           int type = atoi(pItem->FirstChildElement("type")->GetText());
+           std::string name = pItem->FirstChildElement("name")->GetText();
+           std::string art = pItem->FirstChildElement("art")->GetText();
+           int charges = atoi(pItem->FirstChildElement("charges")->GetText());
+           int effect = atoi(pItem->FirstChildElement("effect")->GetText());
+           Consumable* actConsumable = new Consumable(name, art, getConsumableTypeText(type), charges, effect);
+           inventory->addItem(actConsumable);
+        }
+    }
+
+    playerState = new Player(skillPoints, experience, buff, buffType, attributes, inventory, equippedWeapon);
 
     return true;
 }
