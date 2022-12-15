@@ -47,7 +47,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 enable_testing()
 # game test
 
-set(TESTS tests/gtest-player.cpp tests/gtest-story.cpp tests/gtest-SaveLoad.cpp )
+set(TESTS tests/gtest-player.cpp tests/gtest-story.cpp tests/gtest-SaveLoad.cpp tests/gtest-items.cpp)
 add_executable(test_sajat ${TESTS})
 
 set(SOURCE_FILES_TEST src/attributes.cpp src/chapter.cpp src/itemrepository.cpp src/choice.cpp src/consumable.cpp
