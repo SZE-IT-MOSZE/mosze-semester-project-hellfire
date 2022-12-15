@@ -27,19 +27,16 @@ int main(int argc, char *argv[])
             {
                 if(Game::turn(font, storyFont) == -10)
                 {
-                    std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                     break;
                 }
             }
         }
         else if(result == MenuOptions::LOAD_GAME) {
             if(Game::loadGame()) {
-                std::cout << Game::getPlayer()->getExperience() << std::endl;
                 while(true)
                 {
                     if(Game::turn(font, storyFont) == -10)
                     {
-                        std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                         break;
                     }
                 }
@@ -54,5 +51,9 @@ int main(int argc, char *argv[])
     TTF_CloseFont(titleFont);
     TTF_CloseFont(storyFont);
     TTF_Quit();
+    if(Game::getPlayer() != nullptr)
+        delete Game::getPlayer();
+    if(Game::getChapter() != nullptr)
+        delete Game::getChapter();
     return EXIT_SUCCESS;
 }
