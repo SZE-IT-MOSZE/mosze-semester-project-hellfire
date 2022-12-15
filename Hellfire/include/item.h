@@ -5,7 +5,7 @@
 class Item
 {
     public:
-        std::string getName();
+        virtual std::string getName();
         virtual std::string getArt() = 0;
         int getEffectiveness();
         virtual int getType() = 0;
