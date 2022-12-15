@@ -4,20 +4,44 @@ Player::Player()
 {
     availableSkillPoints = 5;
     experience = 0;
+    buff = 0;
+    buffType = -1;
     attributes = new Attributes();
     inventory = new Inventory();
+    equippedWeapon = nullptr;
 }
 
-Player::Player(int skillPoints, int exp, Attributes* attrb) {
+Player::Player(int skillPoints, int exp, int bf, int bfTp, Attributes* attrb, Inventory* inv, Weapon* wpn) {
     availableSkillPoints = skillPoints;
     experience = exp;
+    buff = bf;
+    buffType = bfTp;
+
     attributes = attrb;
-    inventory = new Inventory();
+    inventory = inv;
+    equippedWeapon = wpn;
+    if(wpn != nullptr) {
+        wpn->equip();
+    }
 }
 
 int Player::getExperience()
 {
     return experience;
+}
+
+void Player::applyBuff(int effectiveness, int type) {
+    buff = effectiveness;
+    buffType = type;
+}
+
+void Player::removeBuff() {
+    buff = 0;
+    buffType = -1;
+}
+
+bool Player::hasBuff() {
+    return buff != 0;
 }
 
 Inventory* Player::getInventory()
@@ -61,6 +85,36 @@ std::string Player::determineCorruptionArt() {
     else {
          return "assets/Necklace.bmp";
     }
+}
+
+Weapon* Player::getEquippedWeapon() {
+    return equippedWeapon;
+}
+
+void Player::setEquippedWeapon(Weapon* weapon) {
+    if(weapon == nullptr) {
+        equippedWeapon = nullptr;
+        return;
+    }
+    if(weapon->isEquipped()) {
+        weapon->dequip();
+        equippedWeapon = nullptr;
+        return;
+    }
+    if(equippedWeapon != nullptr) {
+        equippedWeapon->dequip();
+        equippedWeapon = nullptr;
+    }
+    equippedWeapon = weapon;
+    equippedWeapon->equip();
+}
+
+int Player::getBuff() {
+    return buff;
+}
+
+int Player::getBuffType() {
+    return buffType;
 }
 
 Player::~Player()

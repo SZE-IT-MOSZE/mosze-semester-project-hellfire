@@ -13,10 +13,17 @@ class Player
         void setSkillPoints(int n);
         int getSkillPoints();
         void setExperience(int amount);
+        Weapon* getEquippedWeapon();
+        void setEquippedWeapon(Weapon* wpn);
         int getExperience();
+        void applyBuff(int effectiveness, int type);
+        void removeBuff();
+        bool hasBuff();
+        int getBuffType();
+        int getBuff();
         std::string determineCorruptionArt();
         Player();
-        Player(int skillPoints, int experience, Attributes* attributes);
+        Player(int skillPoints, int exp, int bf, int bfTp, Attributes* attrb, Inventory* inv, Weapon* wpn);
         ~Player();
     protected:
 
@@ -24,9 +31,10 @@ class Player
         Inventory* inventory;
         int availableSkillPoints;
         Attributes* attributes;
-        std::string name;
         int experience;
-       // Item& equippedItem;
+        int buff;
+        int buffType;
+        Weapon* equippedWeapon;
 };
 
 #endif // PLAYER_H
