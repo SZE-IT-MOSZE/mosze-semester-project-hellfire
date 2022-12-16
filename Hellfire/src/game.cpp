@@ -1320,6 +1320,12 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         if(selected[i] == true)
                         {
                             actScene->chooseChoice(choices[i], player);
+
+                            //secret ending
+                            if(actualChapter->getOrder() == 4 && actualChapter->getSceneIndex() == 15) {
+                                return -10;
+                            }
+
                             if(choices[i]->isFailed())
                             {
                                 return i + 1;
