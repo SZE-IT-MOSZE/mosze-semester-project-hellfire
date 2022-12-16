@@ -1156,7 +1156,6 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
                     {
                         playerInventory->addItem(itemRepository.getRandomItem());
                     }
-                    std::cout << playerInventory->getItemsCount() << std::endl;
 
                     int prevChapterOrder = actualChapter->getOrder();
                     loadNextChapter(prevChapterOrder + 1);
@@ -1196,15 +1195,21 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
     {
         if(playerCorruption <= -3)
         {
+            delete actScene->getChoices()[1];
+            delete actScene->getChoices()[2];
             choices = std::vector<Choice*>({actScene->getChoices()[0]});
         }
         else if(playerCorruption >= 2)
         {
-            choices = std::vector<Choice*>({actScene->getChoices()[3]});
+            delete actScene->getChoices()[0];
+            delete actScene->getChoices()[1];
+            choices = std::vector<Choice*>({actScene->getChoices()[2]});
         }
         else
         {
-            choices = std::vector<Choice*>({actScene->getChoices()[2]});
+            delete actScene->getChoices()[0];
+            delete actScene->getChoices()[2];
+            choices = std::vector<Choice*>({actScene->getChoices()[1]});
         }
     }
 

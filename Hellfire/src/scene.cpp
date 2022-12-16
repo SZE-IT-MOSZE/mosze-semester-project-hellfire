@@ -28,7 +28,6 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
     int weaponType = -1;
     int weaponBuff = 0;
     if(playerWeapon != nullptr) {
-            std::cout << "i run" << std::endl;
         weaponType = playerWeapon->getType();
         weaponBuff = playerWeapon->getEffectiveness();
     }
