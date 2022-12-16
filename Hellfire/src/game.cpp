@@ -7,6 +7,8 @@
 #include "weapon.h"
 #include "gamestatemanager.h"
 #include "itemrepository.h"
+#include "encounter.h"
+#include "encounterrepository.h"
 
 const char* Game::GAME_TITLE = "MOrdor'S Zealous Enmity: A Lord of the Rings story";
 
@@ -39,6 +41,7 @@ Chapter* Game::getChapter()
     return actualChapter;
 }
 
+//Új chapter betöltése xml-ből, egyszerre mindig egy chapter van betöltve
 void Game::loadNextChapter(int chapterIndex)
 {
     GameStateManager stateManager;
@@ -54,9 +57,102 @@ Player* Game::getPlayer()
     return player;
 }
 
+void Game::showEncounter(TTF_Font* font, TTF_Font* titleFont) {
+    //Képernyő törlése
+    SDL_RenderClear(Render::renderer);
+    SDL_Color color[2] = {{255,255,255}, {255,0,0}};
+    SDL_Surface* title = TTF_RenderUTF8_Solid(titleFont, "Random encounter", color[0]);
+
+    EncounterRepository encounterRepository;
+
+    //encounterRepository-val egy random encounter betöltése
+    Encounter* encounter = encounterRepository.getRandomEncounter();
+    std::string storybitText = encounter->getStorybit();
+    std::string optionText = encounter->getOption();
+    //Az encounter difficulty scalelődik az adott chapter számával, hogy teljesíthető legyen de közben nehéz
+    int difficulty = actualChapter->getOrder() * 5;
+    int type = encounter->getType();
+    if(type == static_cast<int>(ChoiceType::Strength)) {
+        optionText += " (" + std::to_string(difficulty) + " strength)";
+    }
+    else if(type == static_cast<int>(ChoiceType::Intelligence)) {
+        optionText += " (" + std::to_string(difficulty) + " intelligence)";
+    }
+    else {
+        optionText += " (" + std::to_string(difficulty) + " persuasion)";
+    }
+
+    SDL_Surface* storybit = TTF_RenderUTF8_Solid_Wrapped(font, storybitText.c_str(), color[0], Render::WIDTH - 200);
+    SDL_Surface* option = TTF_RenderUTF8_Solid_Wrapped(font, optionText.c_str(), color[1], Render::WIDTH - 200);
+
+    SDL_Surface* background = SDL_LoadBMP("assets/Mordor2.bmp");
+    SDL_Surface* dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
+
+    SDL_Rect pos_img = {  0,
+                          0,
+                          background->w, background->h
+                       };
+
+    SDL_Rect pos_frame = {  0,
+                            420,
+                            dialogFrame->w, dialogFrame->h
+                         };
+
+    SDL_Rect titlePos =  {Render::WIDTH / 2 - title->clip_rect.w / 2,
+                          Render::HEIGHT / 4 - title->clip_rect.h,
+                          title->w, title->h
+                         };
+    SDL_Rect pos[2] =  { {
+            Render::WIDTH / 2 - storybit->clip_rect.w/2,
+            Render::HEIGHT / 2 - storybit->clip_rect.h,
+            storybit->w, storybit->h
+        },
+        {
+            Render::WIDTH / 2 - option->clip_rect.w/2,
+            440,
+            option->w, option->h
+        },
+    };
+
+
+    Render::renderSurface(background, pos_img);
+    Render::renderSurface(dialogFrame, pos_frame);
+    Render::renderSurface(title, titlePos);
+    Render::renderSurface(storybit, pos[0]);
+    Render::renderSurface(option, pos[1]);
+
+    Uint32 time;
+    SDL_Event event;
+    while(true)
+    {
+        time=SDL_GetTicks();
+        if(SDL_PollEvent(&event))
+        {
+            switch(event.type)
+            {
+            case SDL_QUIT:
+                return;
+            case SDL_KEYDOWN:
+                //Enter hatására megpróbáljuk teljesíteni az encountert és visszajutunk a játékmenetbe
+                if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
+                {
+                    encounter->engage(difficulty, player);
+                    delete encounter;
+                    return;
+                }
+            }
+        }
+    }
+
+
+}
+
+//Ez a menü játék közben megnyitható
 int Game::openInGameMenu(TTF_Font* font)
 {
     SDL_RenderClear(Render::renderer);
+
+    //SDL-es elemek konfigurációja, kiírandó textek, color, pozíciók
     bool selected[2] = {true, false};
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
     SDL_Surface* background = SDL_LoadBMP("assets/main.bmp");
@@ -103,23 +199,26 @@ int Game::openInGameMenu(TTF_Font* font)
             case SDL_QUIT:
                 return 1;
             case SDL_KEYDOWN:
+                //Ha a menüben a játék befejezése ki van választva, és entert nyomunk akkor visszatért a főmenübe
                 if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
                     if(selected[1])
                     {
                         return 0;
                     }
+                  //Egyébként meg elmenti a játék állását, és visszadob a játékmenetbe
                     else
                     {
-                        //Mentés
                         saveGame();
                         return 1;
                     }
                 }
+                //Escape esetén visszadob a játékmentetbe, ezzel zárható be a menü ha nem akarunk választani semmit
                 else if(SDLK_ESCAPE == event.key.keysym.sym)
                 {
                     return 1;
                 }
+                //Menüpontok választása fel-le nyilakkal
                 else if(SDLK_UP == event.key.keysym.sym)
                 {
                     background = SDL_LoadBMP("assets/main.bmp");
@@ -179,10 +278,13 @@ int Game::openInGameMenu(TTF_Font* font)
     return -1;
 }
 
+//Inventory ablak megnyitását, és kirajzolásáért felel ez a metódus, mindig 4 item rajzolódik ki egy időben
 void Game::openInventory(TTF_Font* font)
 {
     SDL_RenderClear(Render::renderer);
 
+    //SDL-es elemek konfigurációja, kiírandó textek, color, pozíciók
+    //Továbbá a játékos inventoryjának és tartalmának lekérdezése
     Inventory* playerInventory = player->getInventory();
     std::vector<Item*>& items = playerInventory->getItems();
     int actPage = 1;
@@ -285,6 +387,8 @@ void Game::openInventory(TTF_Font* font)
                            Render::HEIGHT / 8 - title->clip_rect.h,
                            title->w, title->h
                           };
+
+    //Meghatározzuk hogy hány page van az inventoryban ha egyszerre 4-et jelenítünk meg.
     std::string pageIndicatorText = std::to_string(actPage) + "/";
     if(playerInventory->getItemsCount() == 0)
     {
@@ -311,6 +415,7 @@ void Game::openInventory(TTF_Font* font)
     for(int i = (actPage - 1) * 4; i < 4 && i < playerInventory->getItemsCount(); i++)
     {
         inventoryItemIcon = SDL_LoadBMP(items[i]->getArt().c_str());
+        //kezdetben a szelektált érték ugye a 0., és annak selectált állapotát más képpel jelezzük
         if(i == 0)
         {
             selectedInventoryItemFrame = SDL_LoadBMP("assets/selected_frame.bmp");
@@ -337,15 +442,19 @@ void Game::openInventory(TTF_Font* font)
             case SDL_QUIT:
                 return;
             case SDL_KEYDOWN:
+                //i gomb lenyomásával bezárhatjuk az inventory-t
                 if(SDLK_i == event.key.keysym.sym)
                 {
                     return;
                 }
+                //fel-le nyilak csak akkor renderelik újra az inventory-t ha nem üres
                 else if(SDLK_UP == event.key.keysym.sym)
                 {
                     if(actItemIndex > 0 && playerInventory->getItemsCount() > 0)
                     {
                         SDL_RenderClear(Render::renderer);
+                        //felfelé nyíl hatására az actItemIndex csökken, az actItem index alapján pedig lemappeljük melyik pagen lehetünk ha
+                        //egyszerre 4 item jelenik meg vizuálisan, indexelésnél is ügyelni kell erre
                         actItemIndex--;
                         selected[actItemIndex] = true;
                         selected[actItemIndex + 1] = false;
@@ -360,6 +469,8 @@ void Game::openInventory(TTF_Font* font)
 
                         for(int i = (actPage - 1) * 4; i < (4 + (actPage - 1) * 4) && i < playerInventory->getItemsCount(); i++)
                         {
+                            //Attól függően hogy az adott item weapon, vagy consumable más módon rajzoljuk ki hiszen egy consumable-nek más tulajdonságai is vannak
+                            //, mint pl a charges
                             Consumable* potion = dynamic_cast<Consumable*>(items[i]);
                             Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
                             std::string detailTop = "";
@@ -415,6 +526,7 @@ void Game::openInventory(TTF_Font* font)
                     if(actItemIndex < playerInventory->getItemsCount() - 1)
                     {
                         SDL_RenderClear(Render::renderer);
+                        //lefelé nyíl hatására az actItemIndex nő
                         actItemIndex++;
                         selected[actItemIndex] = true;
                         selected[actItemIndex - 1] = false;
@@ -478,9 +590,13 @@ void Game::openInventory(TTF_Font* font)
                         }
                     }
                 }
+               //f gomb megnyomásával az adott kiválaszott itemet használhatjuk
                else if(SDLK_f == event.key.keysym.sym) {
                   for(int i = 0; i < playerInventory->getItemsCount(); i++) {
                     if(selected[i]) {
+                        //itt is attól függően hogy consumable, vagy weapon más cselekmény következik be,
+                        //ha weapon akkor equippelhetjük
+                        //ha consumable akkor iszunk belőle, ezáltal csökken a charges értéke pl
                         Consumable* potion = dynamic_cast<Consumable*>(items[i]);
                         Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
                         if(potion != nullptr) {
@@ -492,6 +608,7 @@ void Game::openInventory(TTF_Font* font)
                         break;
                     }
                   }
+                    //használat után újrarendereljük az inventory-t a friss állapotokkal
                     SDL_RenderClear(Render::renderer);
                     title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
                     std::string pageIndicatorText = std::to_string(actPage) + "/";
@@ -558,6 +675,7 @@ void Game::openInventory(TTF_Font* font)
                         Render::renderSurface(details[i - 4 * (actPage - 1)][1], pos_details[i - 4 * (actPage - 1)][1]);
                     }
                }
+               //d hatására a kiválasztott item törlődik az inventory-ból
                else if(SDLK_d == event.key.keysym.sym) {
                   actPage = 1;
                   for(int i = 0; i < playerInventory->getItemsCount(); i++) {
@@ -565,6 +683,7 @@ void Game::openInventory(TTF_Font* font)
                         selected[i] = false;
                         selected[0] = true;
                         actItemIndex = 0;
+                        //ha weapon az adott item és equippelve volt akkor null pointerré tesszük a player equippedWeapon Weapon pointer tagváltozóját
                         Weapon* weapon = dynamic_cast<Weapon*>(items[i]);
                         if(weapon != nullptr) {
                             if(weapon->isEquipped()) {
@@ -575,6 +694,7 @@ void Game::openInventory(TTF_Font* font)
                         break;
                     }
                   }
+                  //Majd kirajzoljuk az inventory friss állapotát, nyilván a törölt elem nem fog megjelenni, az már a memóriából is törölve lett
                     SDL_RenderClear(Render::renderer);
                     title = TTF_RenderUTF8_Solid(font, "Inventory - Press D to delete or F to use", color);
                     std::string pageIndicatorText = std::to_string(actPage) + "/";
@@ -647,8 +767,11 @@ void Game::openInventory(TTF_Font* font)
     return;
 }
 
+//az attribute windowban oszthatja szét a player a skill pontjait attribútumokra
 void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
 {
+    //SDL-es elemek konfigurációja, kiírandó textek, color, pozíciók
+    //továbbá a player attribútumainak lekérdezése
     SDL_RenderClear(Render::renderer);
     SDL_Color color[2] = {{255,255,255}, {255,0,0}};
     bool selected[3] = {true, false, false};
@@ -661,6 +784,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     std::string intelligenceText = "Intelligence: " + std::to_string(playerAttributes->getIntelligence());
     std::string persuasionText = "Persuasion: " + std::to_string(playerAttributes->getPersuasion());
     std::string corruptionText = "Corruption: " + std::to_string(playerAttributes->getCorruption());
+    //ha a játékos rendelkezik buffal, melyet egy consumable elfogyasztásával szerzett azt külön jelezzük
     if(player->hasBuff()) {
         int type = player->getBuffType();
         if(type == static_cast<int>(ConsumableType::Strength)) {
@@ -673,6 +797,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
             persuasionText += " + " + std::to_string(player->getBuff());
         }
     }
+    //ha a játékosnak van egy equipped fegyvere azt külön jelezzük
     Weapon* playerWeapon = player->getEquippedWeapon();
     if(playerWeapon != nullptr) {
         int weaponType = playerWeapon->getType();
@@ -767,6 +892,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
             case SDL_QUIT:
                 return;
             case SDL_KEYDOWN:
+                //Enter lenyomásával a kiválasztott attribútumhoz adhatjuk hozzá a skill pontjainkat
                 if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
                     SDL_RenderClear(Render::renderer);
@@ -777,6 +903,8 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                             toggles[i] = TTF_RenderUTF8_Solid(font, "Hozzáad", color[1]);
                             if(player->getSkillPoints() > 0)
                             {
+                                //Attól függően mely attribútumról van szó az adott upgrade metódus hívódik meg
+                                //és természetesen csökken a skillpoint értéke 1-el
                                 switch(i)
                                 {
                                 case 0:
@@ -800,6 +928,7 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                         }
                         Render::renderSurface(toggles[i], togglePos[i]);
                     }
+                    //friss állapotokat rendereljük utána
                     skillPointsText = "Szabad skill pontok: " + std::to_string(player->getSkillPoints());
                     skillPoints = TTF_RenderUTF8_Solid(titleFont, skillPointsText.c_str(), color[0]);
 
@@ -843,10 +972,13 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
                     Render::renderSurface(persuasion, pos[2]);
                     Render::renderSurface(corruption, cpnTextPos);
                 }
+                //j lenyomásával visszatérünk a játékmenetbe
                 else if(SDLK_j == event.key.keysym.sym)
                 {
                     return;
                 }
+                //fel és le nyilak hatására kiválaszthatjuk melyik attribútumhoz szeretnénk hozzáadni egyet
+                //a kiválasztottságot az adott hozzáad text piros színe indikálja
                 else if(SDLK_UP == event.key.keysym.sym)
                 {
                     for(int i = 0; i < 3; i++)
@@ -945,9 +1077,11 @@ void Game::openAttribueWindow(TTF_Font* font, TTF_Font* titleFont)
     }
 }
 
+//ez a főmenü mely a játék kezdetekor nyílik meg vagy a játékmenet közbeni menüből ide térhetünk vissza ha megszakítjuk a játékmenetet
 int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState)
 {
 
+    //SDL-es elemek konfigurációja, kiírandó textek, color, pozíciók
     const int NUMMENU=3;
     const char* labels[NUMMENU] = {"Új játék", "Játék betöltése", "Kilépés"};
     SDL_Surface* menus[NUMMENU];
@@ -1014,6 +1148,7 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
         case SDL_QUIT:
             return static_cast<int>(MenuOptions::EXIT_GAME);
         case SDL_KEYDOWN:
+            //enter hatására visszaadjuk az adott kiválasztott érték indexét amit lekezelünk a main.cpp-ben
             if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
             {
                 for(int i = 0; i < NUMMENU; i++)
@@ -1024,7 +1159,7 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
                     }
                 }
             }
-
+            //fel-le nyilakkal ugrálhatnuk a menüpontok között, a változást újrarenderelés után az adott text piros színe indikálja
             else if(SDLK_UP == event.key.keysym.sym)
             {
                 for(int i = 0; i < NUMMENU; i++)
@@ -1035,6 +1170,7 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
                         menus[i] = TTF_RenderUTF8_Solid(font, labels[i], color[0]);
                         Render::renderSurface(menus[i], pos[i]);
 
+                        //mengézzük hogy ha pl felfelé ugrálás során a tetején vagyunk akkor a következő lenyomásra a legalsó pont lesz kiválasztva
                         if(i == 0)
                         {
                             selected[NUMMENU-1] = true;
@@ -1083,6 +1219,7 @@ int Game::openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int
     return result;
 }
 
+//ez az ablak a chapterek között jelenik meg, megmutatja hány xp-t szereztünk, skill pontot, és itemet
 void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
 {
     SDL_RenderClear(Render::renderer);
@@ -1147,6 +1284,7 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
             case SDL_QUIT:
                 return;
             case SDL_KEYDOWN:
+                //Enter hatására bezárhatjuk az ablakot
                 if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
                     player->setExperience(-(playerExperience / 100 * 100));
@@ -1167,6 +1305,7 @@ void Game::openInterludeWindow(TTF_Font* titleFont, TTF_Font* font)
 }
 
 
+//Ez a metódus új játékot hoz létre, ha már játszottunk, akkor törli az előző chaptert és playert és újra létrehozza őket a statikus tagváltozókba, betölti az első chaptert
 void Game::newGame()
 {
     if(player != nullptr)
@@ -1183,14 +1322,19 @@ void Game::newGame()
         std::cout << "Failed to load chapter from story.xml." << std::endl;
     }
 }
+
+//A játék legfontosabb metódusa, mely játékmenet közbeni interakciót kezeli le
 int Game::turn(TTF_Font* font, TTF_Font* storyFont)
 {
     SDL_RenderClear(Render::renderer);
-
+    //SDL-es elemek konfigurációja, kiírandó textek, color, pozíciók
+    //adott aktuális jelenet és hozzá tartozó choiceok lekérdezése
     Scene* actScene = actualChapter->getActScene();
 
     std::vector<Choice*>& choices =  actScene->getChoices();
     int playerCorruption = player->getAttributes()->getCorruption();
+
+    //ending filterezése ha utolsó chapternél vagyunk corruption alapján
     if(actualChapter->isLastChapter() && actualChapter->getSceneIndex() == actualChapter->getSceneCount() - 1)
     {
         if(playerCorruption <= -3)
@@ -1213,6 +1357,7 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
         }
     }
 
+    //adott scene artjának betöltése és renderelése alább
     SDL_Surface* background = SDL_LoadBMP(actScene->getArt().c_str());
     SDL_Surface* dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
 
@@ -1232,6 +1377,8 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
     Render::renderSurface(background, pos_img);
     Render::renderSurface(dialogFrame, pos_frame);
 
+    //ha egy adott chapteren belül az első scene-nél tartunk akkor kiírjuk a chapter címét is, kivéve az első chapter esetében ahol
+    //az első scene tutorial célokat valósít meg, és ott a másodiknál írjuk ki
     if(actualChapter->getSceneIndex() == 0 && actualChapter->getOrder() > 1)
     {
 
@@ -1268,15 +1415,18 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
     bool selected[choices.size()];
     SDL_Rect choiceMenuPos[choices.size()];
 
+    //choice-ok kirajzolása dinamikusan egymás alá attól függően egy scene mennyit tartalmaz
     int prevChoiceH = 20;
     for(int choiceIndex = 0; choiceIndex < choices.size(); choiceIndex++)
     {
         std::string text = std::to_string(choiceIndex + 1) + ". " + choices[choiceIndex]->getText();
+        //ha nem default típusú choice-ról van szó akkor kiírjuk mennyi szükséges az adott attribútumból a teljesítéshez
         if(choices[choiceIndex]->getType() != static_cast<int>(ChoiceType::Default))
         {
             text += " (" +  std::to_string(choices[choiceIndex]->getDifficulty()) + " " +
                     getChoiceTypeText(static_cast<ChoiceType>(choices[choiceIndex]->getType())) + ")";
         }
+        //ha a choice failed állapotú azt is feltüntetjük
         if(choices[choiceIndex]->isFailed())
         {
             text += " [Failed]";
@@ -1313,6 +1463,9 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
             case SDL_QUIT:
                 return -10;
             case SDL_KEYDOWN:
+                //enter hatására a kiválaszott choice-t megpróbáljuk teljesíteni, ha sikertelen akkor nem lépünk tovább,
+                //egyébként betöltjük a következő scenet vagy annyit ugrunk amennyi az adott choice step értéke volt
+                //, viszont ha a chapter utolsó scene-vel volt dolgunk akkor az interludeWindow nyílik meg
                 if(SDL_SCANCODE_RETURN == event.key.keysym.scancode)
                 {
                     for(int i = 0; i < choices.size(); i++)
@@ -1332,9 +1485,18 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                             }
                             if (choices[i]->getStep() == 0)
                             {
+                                //ha lastChapter-nél tartunk akkor visszatérünk a főmenübe
                                 if(actualChapter->isLastChapter())
                                 {
                                     return -10;
+                                }
+                                //Random encounter 50-50% eséllyel
+                                std::random_device rd;
+                                std::mt19937 rng(rd());
+                                std::uniform_int_distribution<int> uni(1,10);
+                                int random_integer = uni(rng);
+                                if(random_integer > 5) {
+                                    showEncounter(storyFont, font);
                                 }
                                 openInterludeWindow(font, storyFont);
                                 return 0;
@@ -1344,7 +1506,7 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         }
                     }
                 }
-
+                //fel-le nyilak hatására lehet választani a choiceok kiválasztottságán
                 else if(SDLK_UP == event.key.keysym.sym)
                 {
                     for(int i = 0; i < choices.size(); i++)
@@ -1435,9 +1597,11 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         }
                     }
                 }
+                //j lenyomására megnyílik az attribute window
                 else if(SDLK_j == event.key.keysym.sym)
                 {
                     openAttribueWindow(storyFont, font);
+                    //bezárás esetén kirajzoljuk a játékmenet aktuális állapotát
                     SDL_RenderClear(Render::renderer);
                     background = SDL_LoadBMP(actScene->getArt().c_str());
                     dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
@@ -1495,9 +1659,11 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         }
                     }
                 }
+                //i hatására megnyílik az inventory
                 else if(SDLK_i == event.key.keysym.sym)
                 {
                     openInventory(font);
+                    //bezárás után kirajzoljuk a játékmenet aktuális állapotát
                     SDL_RenderClear(Render::renderer);
                     background = SDL_LoadBMP(actScene->getArt().c_str());
                     dialogFrame = SDL_LoadBMP("assets/dialogframe.bmp");
@@ -1555,10 +1721,13 @@ int Game::turn(TTF_Font* font, TTF_Font* storyFont)
                         }
                     }
                 }
+                //escape hatására megnyithatjuk a játékmenet során elérhető menüt
                 else if(SDLK_ESCAPE == event.key.keysym.sym)
                 {
                     int result = openInGameMenu(font);
                     SDL_RenderClear(Render::renderer);
+                    //bezárás után ha az az értéket kapjuk vissza, amely azt indikálja hogy vissza szeretnénk térni a
+                    //főmenübe és félbeszakítani a játékmenetet akkor visszatér a turn
                     if(result == 0)
                     {
                         return -10;
