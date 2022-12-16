@@ -4,6 +4,7 @@ using namespace tinyxml2;
 
 ItemRepository::ItemRepository() {};
 
+//Egy random consumable betöltése a potions.xml-bõl
 Consumable* ItemRepository::loadRandomConsumableFromXML() {
     XMLDocument xmlConsumables;
     XMLError result = xmlConsumables.LoadFile("assets/potions.xml");
@@ -39,6 +40,7 @@ Consumable* ItemRepository::loadRandomConsumableFromXML() {
    return nullptr;
 }
 
+//Egy random weapon betöltése a weapons.xml-bõl
 Weapon* ItemRepository::loadRandomWeaponFromXML() {
     XMLDocument xmlWeapons;
     XMLError result = xmlWeapons.LoadFile("assets/weapons.xml");
@@ -71,6 +73,7 @@ Weapon* ItemRepository::loadRandomWeaponFromXML() {
     return nullptr;
 }
 
+//Ezzel a metódussal visszakaphatunk egy random itemet 1/20 esetben egy weapont kapunk vissza, minden más esetben consumable-t
 Item* ItemRepository::getRandomItem() {
     std::random_device rd;
     std::mt19937 rng(rd());

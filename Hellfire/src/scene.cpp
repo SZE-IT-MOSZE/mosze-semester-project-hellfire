@@ -9,6 +9,7 @@ Scene::Scene(std::string sb, std::string a,  std::string odr, std::vector<Choice
     order = odr;
 }
 
+//d20 kockadobást szimuláló random értéket ad vissza
 int Scene::d20numberGenerator()
 {
     std::random_device rd;
@@ -18,6 +19,10 @@ int Scene::d20numberGenerator()
     return random_integer;
 }
 
+//attribute check során megnézzük milyen attribute-al nézünk szembe a chosenChoice-ban, és az alapján
+//megnézzük, hogy az adott player rendelkezik e elegendõ attribútummal a teljesítéshez, hozzáadva a buff és a weapon effektjeit
+//a random faktorral viszont ha 20-ast dobunk akkor a teljesítéshez elég az érték felével rendelkeznünk
+//egyébként failed lesz a choice és nem kapjuk meg a hozzá tartozó xp-t
 void Scene::attributeCheck(Choice* chosenChoice, Player* player)
 {
     int choiceType = chosenChoice -> getType();
@@ -118,6 +123,7 @@ void Scene::attributeCheck(Choice* chosenChoice, Player* player)
     }
 }
 
+//ha nem failed akkor attribute check történik, és a buff-ok lekerülnek a playerrõl, mivel egy choice erejéig élnek
 void Scene::chooseChoice(Choice* chosenChoice, Player* player)
 {
     if(chosenChoice -> isFailed())

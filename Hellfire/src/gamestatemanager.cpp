@@ -10,6 +10,7 @@ const char* STORY_PATH = "story/story.xml";
 
 GameStateManager::GameStateManager() {};
 
+// a következõ chapter betöltése xml-bõl, az elõzõ indexe alapján
 Chapter* GameStateManager::loadChapterFromXML(int chapterIndex)
 {
     XMLDocument doc;
@@ -64,23 +65,26 @@ Chapter* GameStateManager::loadChapterFromXML(int chapterIndex)
     return nullptr;
 }
 
+//utility metódus új elem string értékkel egy adott XMLNode alá való beszúrásra, mint gyermek
 void GameStateManager::insertToXmlElement(std::string newElementName, std::string value, XMLNode* parent, XMLDocument* xmlDoc) {
     XMLElement * newElement = xmlDoc->NewElement(newElementName.c_str());
     newElement->SetText(value.c_str());
     parent->InsertEndChild(newElement);
 }
-
+//utility metódus új elem int értékkel egy adott XMLNode alá való beszúrásra, mint gyermek
 void GameStateManager::insertToXmlElement(std::string newElementName, int value, XMLNode* parent, XMLDocument* xmlDoc) {
     XMLElement * newElement = xmlDoc->NewElement(newElementName.c_str());
     newElement->SetText(value);
     parent->InsertEndChild(newElement);
 }
 
+//az adott játék állapota mentésre kerül a gameState.xml fájlba
 void GameStateManager::saveGameStateToXML(std::string filename, Player* player, int chapterIndex, int sceneIndex, std::vector<Choice*>* choices) {
     XMLDocument xmlState;
     XMLNode * root = xmlState.NewElement("state");
     xmlState.InsertFirstChild(root);
 
+    //adott chapter, chapter index, scene index mentése, és a choice-ok állapotai hogy mentés-visszatöltés után se lehessen megkerülni dolgokat
     XMLNode * pChapter = xmlState.NewElement("chapter");
     insertToXmlElement("chapter-index", chapterIndex, pChapter, &xmlState);
     insertToXmlElement("scene-index", sceneIndex, pChapter, &xmlState);
@@ -92,6 +96,7 @@ void GameStateManager::saveGameStateToXML(std::string filename, Player* player, 
     XMLNode * pPlayer = xmlState.NewElement("player");
     Attributes* playerAttributes = player->getAttributes();
 
+    //player attribútumainak mentése, továbbá a buff megjegyzése
     insertToXmlElement("skill-points", player->getSkillPoints(), pPlayer, &xmlState);
     insertToXmlElement("experience", player->getExperience(), pPlayer, &xmlState);
     insertToXmlElement("strength", playerAttributes->getStrength(), pPlayer, &xmlState);
@@ -101,6 +106,7 @@ void GameStateManager::saveGameStateToXML(std::string filename, Player* player, 
     insertToXmlElement("buff", player->getBuff(), pPlayer, &xmlState);
     insertToXmlElement("buffType", player->getBuffType(), pPlayer, &xmlState);
 
+    //inventory állapotának mentése, és egyes itemeknél megjegyezni pl potion esetén a charge értéket
     XMLNode * pInventory = xmlState.NewElement("inventory");
     Inventory* playerInventory = player->getInventory();
     std::vector<Item*>& items = playerInventory->getItems();
@@ -136,6 +142,7 @@ void GameStateManager::saveGameStateToXML(std::string filename, Player* player, 
     xmlState.SaveFile(filename.c_str());
 }
 
+//játékmenet állapotának betöltése, mindazt amit a saveGameState-nél lementettünk
 bool GameStateManager::loadGameStateFromXML(std::string filename, Player* player, Chapter* chapter) {
     XMLDocument xmlState;
     XMLError result = xmlState.LoadFile(filename.c_str());

@@ -5,6 +5,7 @@ int Consumable::getType()
     return static_cast<int>(type);
 }
 
+//a consumable töltöttségi szintje alapján más art kerül visszaadásra
 std::string Consumable::getArt() {
     if(charges == 3) {
         return "assets/" + art + "-full.bmp";
@@ -19,6 +20,7 @@ std::string Consumable::getArt() {
     }
 }
 
+//baseArt a xml-es mentés egyszerûsítésére
 std::string Consumable::getBaseArt() {
     return art;
 }
@@ -33,6 +35,7 @@ bool Consumable::isEmpty()
     return charges == 0;
 }
 
+//ha az adott consumable üres akkor visszatérünk nem kap a player buffot
 void Consumable::use(Player* player)
 {
     if(isEmpty())

@@ -20,6 +20,7 @@ std::string Weapon::getArt() {
     return "assets/" + art;
 }
 
+//base art a xml-es mentés megsegítésére
 std::string Weapon::getBaseArt() {
     return art;
 }

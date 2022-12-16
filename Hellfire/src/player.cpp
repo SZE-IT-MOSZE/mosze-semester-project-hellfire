@@ -68,6 +68,7 @@ void Player::setExperience(int amount)
     experience += amount;
 }
 
+//corruption alapján a megfelelõ art visszaküldése
 std::string Player::determineCorruptionArt() {
     int corruption = attributes->getCorruption();
     if(corruption >= -1  && corruption <= 1) {

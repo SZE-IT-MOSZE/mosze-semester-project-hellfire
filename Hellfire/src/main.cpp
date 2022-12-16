@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     int result = 0;
     while(true)
     {
+        //A fõmenü megnyitásával kezd a program, és a visszatérési érték alapján, új játék, betöltés, bezárás hajtódik végre
         result = Game::openMenu(windowSurface, font, titleFont, result);
         if(result == MenuOptions::EXIT_GAME)
         {
@@ -43,7 +44,6 @@ int main(int argc, char *argv[])
             }
         }
     }
-
 
     SDL_FreeSurface(windowSurface);
     SDL_Quit();
