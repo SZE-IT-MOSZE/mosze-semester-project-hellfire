@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     int result = 0;
     while(true)
     {
+        //A fõmenü megnyitásával kezd a program, és a visszatérési érték alapján, új játék, betöltés, bezárás hajtódik végre
         result = Game::openMenu(windowSurface, font, titleFont, result);
         if(result == MenuOptions::EXIT_GAME)
         {
@@ -27,19 +28,16 @@ int main(int argc, char *argv[])
             {
                 if(Game::turn(font, storyFont) == -10)
                 {
-                    std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                     break;
                 }
             }
         }
         else if(result == MenuOptions::LOAD_GAME) {
             if(Game::loadGame()) {
-                std::cout << Game::getPlayer()->getExperience() << std::endl;
                 while(true)
                 {
                     if(Game::turn(font, storyFont) == -10)
                     {
-                        std:: cout << "Player experience: " << Game::getPlayer()->getExperience() << std::endl;
                         break;
                     }
                 }
@@ -47,12 +45,15 @@ int main(int argc, char *argv[])
         }
     }
 
-
     SDL_FreeSurface(windowSurface);
     SDL_Quit();
     TTF_CloseFont(font);
     TTF_CloseFont(titleFont);
     TTF_CloseFont(storyFont);
     TTF_Quit();
+    if(Game::getPlayer() != nullptr)
+        delete Game::getPlayer();
+    if(Game::getChapter() != nullptr)
+        delete Game::getChapter();
     return EXIT_SUCCESS;
 }

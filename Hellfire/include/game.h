@@ -13,9 +13,10 @@ class Game
         static Chapter* getChapter();
         static Player* getPlayer();
         static void loadNextChapter(int chapterIndex);
-        static void openInventory();
+        static void openInventory(TTF_Font* font);
         static void openAttribueWindow(TTF_Font* font, TTF_Font* titleFont);
         static int openMenu(SDL_Surface* screen, TTF_Font* font, TTF_Font* titleFont, int previousState);
+        static void showEncounter(TTF_Font* font, TTF_Font* titleFont);
         static void newGame();
         static void saveGame();
         static bool loadGame();

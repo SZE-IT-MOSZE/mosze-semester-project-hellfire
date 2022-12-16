@@ -12,7 +12,7 @@
 
         <scene order="2">
             <art>assets/Mordor1.bmp</art>
-            <storybit>$p elérte Mordor sötét, lápos vidékeit, a levegőben forró hamu száll és a lelkét nyomó sötétség lassacskán erősödik, ahogy a közeledik a fekete föld kapujához. A kapu előtt sátor áll, melyet az erdőtündék őrsége lakott. Az őrség parancsnoka meglátja a kapu felé sétálni és megállítja:
+            <storybit>Nandar elérte Mordor sötét, lápos vidékeit, a levegőben forró hamu száll és a lelkét nyomó sötétség lassacskán erősödik, ahogy a közeledik a fekete föld kapujához. A kapu előtt sátor áll, melyet az erdőtündék őrsége lakott. Az őrség parancsnoka meglátja a kapu felé sétálni és megállítja:
             </storybit>
             <options>
             <option diff="0" attr="def" exp="10" cpn="0" step="1">Tovább</option>
@@ -23,7 +23,7 @@
             <art>assets/Wall.bmp</art>
             <storybit>Állj! Orpoher király parancsára az utat Mordorba lezártuk, senki se be se ki nem jöhet. Ki vagy te?</storybit>
              <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="1">A nevem $p, a nyugati királyságból jöttem.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">A nevem Nandar, a nyugati királyságból jöttem.</option>
             </options>
         </scene>
         
@@ -32,6 +32,7 @@
             <storybit>Vagy úgy, egy nyugati "rokon", és mi dolgod íly messze az otthontól?</storybit>
              <options>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Titkos küldetésen vagyok, mellyel a királyunk bízott meg.</option>
+				<option diff="2" attr="per" exp="50" cpn="1" step="2">Titkos küldetésen vagyok, egyébként semmi közöd hozzá, nincs jogod kérdezősködni.</option>
             </options>
         </scene>
         
@@ -41,7 +42,7 @@
             <options>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">(Elmondom az igazságot)</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Egy régi barátomhoz megyek, a keleti őrségben tartózkodik, együtt harcoltunk még réges rég.</option>
-                <option diff="4" attr="per" exp="30" cpn="0" step="1">A dolgom rám tartozik!</option>
+                <option diff="4" attr="per" exp="100" cpn="0" step="1">A dolgom rám tartozik!</option>
             </options>
         </scene>
         
@@ -65,7 +66,7 @@
             <art>assets/Wall.bmp</art>
             <storybit>A hercegnek esetleg szüksége van némi segítségre?</storybit>
             <options>
-                <option diff="2" attr="int" exp="10" cpn="0" step="1">Bármilyen segítség jól jön</option>
+                <option diff="2" attr="int" exp="50" cpn="0" step="1">Bármilyen segítség jól jön</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="2">Nem, köszönöm... mostmár indulnom kell</option>
             </options>
         </scene>
@@ -91,7 +92,7 @@
             <storybit>A herceg átlépi a fekete föld kapuját és megérkezik Udún völgyébe. Eme tájon kezdődött a háború a Sötét Úrral! Már a kapun átlépve érezte, hogy nehezebb lesz a légzése, és egy kisebb nyomás is felütötte a mellkasát. Az úton haladva találkozik egy ifjú legénnyel, aki a közeli faluhoz vitte volna a lelőtt vadat. A fiú láthatóan küszködött a nehéz zsákmány cipelésével.</storybit>
             <options>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Látom el kell neked egy segítő kéz.</option>
-                <option diff="0" attr="def" exp="10" cpn="0" step="6">(Küldetés folytatása)</option>
+                <option diff="0" attr="def" exp="10" cpn="1" step="6">(Küldetés folytatása)</option>
             </options>
         </scene>
         
@@ -99,7 +100,7 @@
             <art>assets/Mordor2.bmp</art>
             <storybit>Ugyan, semmi szükség rá! Különben is, ezt egyedül kell megcsinálnom.</storybit>
             <options>
-                <option diff="3" attr="def" exp="10" cpn="0" step="1">Miért kellene egyedül cipelned? </option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Miért kellene egyedül cipelned? </option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="5">Akkor kitartást!</option>
             </options>
         </scene>
@@ -141,13 +142,21 @@
             <storybit>A herceg folytatta útját és a távolból már megpillantotta Udún völgyének végét. Egy őrizetlen torony állt vele szemben melyet megközelítve érezte, hogy valami belemar a szívébe. Egyszer csak egy ork rontott ki a torony ajtaján:
             </storybit>
             <options>
-                <option diff="0" attr="def" exp="200" cpn="0" step="1">Támadás</option>
+                <option diff="5" attr="str" exp="200" cpn="0" step="1">Támadás</option>
+				<option diff="0" attr="def" exp="10" cpn="0" step="2">Menekülés</option>
             </options>
         </scene>
         
         <scene order="18">
             <art>assets/Mordor3.bmp</art>
             <storybit>A herceget kissé váratlanul érte a támadás, de harci képességei még a korral sem koptak semmit. A tornyon túl várta őt Mordor legsötétebb helye, Gorgoroth kopár fennsíkja.</storybit>
+            <options>
+                <option diff="0" attr="def" exp="10" cpn="0" step="0">Tovább</option>
+            </options>
+        </scene>
+		<scene order="19">
+            <art>assets/Mordor3.bmp</art>
+            <storybit>A túlerőt látva a herceg bölcsen meghátrált a csatából, és sikeresen lerázta üldözőit. A tornyon túl várta őt Mordor legsötétebb helye, Gorgoroth kopár fennsíkja.</storybit>
             <options>
                 <option diff="0" attr="def" exp="10" cpn="0" step="0">Tovább</option>
             </options>
@@ -169,7 +178,7 @@
             <art>assets/Mordor3.bmp</art>
             <storybit>A közelből egy hangos visításra lett figyelmes.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="1">Nézzek utána. Lehet valaki egítségre szorul.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">Nézzek utána. Lehet valaki segítségre szorul.</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Túl veszélyes, inkább nem.</option>
             </options>
         </scene>
@@ -179,7 +188,7 @@
             <storybit>A herceg óvatosan közeledik a vészlő hang irányába, mely egy volt angmari fegyvertárhoz viszi - Lúghash erődje - és meglátja, hogy egy idegen harcos épp 4 orkkal áll szemben. Egy újabb fájdalom üti meg a mellét és érzi, hogy döntenie kell
             </storybit>
             <options>
-                <option diff="3" attr="str" exp="200" cpn="-1" step="1">Segítek az idegennek.</option>
+                <option diff="10" attr="str" exp="250" cpn="-1" step="1">Segítek az idegennek.</option>
                 <option diff="0" attr="def" exp="50" cpn="1" step="2">Megvárom mi sül ki ebből.</option>
             </options>
         </scene>
@@ -264,8 +273,8 @@
             <storybit>Ahogy a bejárathoz értek, egy hatalmas vaskapu állt résnyire nyitva... úgy tűnt a hely üres, de azért egyiküknek sem lankadt a figyelme. Az erődnek több emelete is volt és mikor egy lépcsőhöz értek, Findel azt javasolta, hogy váljanak szét, úgy hamarabb meglelhetik a rejtett kamrát. A hercegnek ugyanakkor azt súgta a megérzése, hogy ez egy rossz ötlet, és szerinte együtt kéne maradniuk:</storybit>
             <options>
                 <option diff="0" attr="def" exp="10" cpn="1" step="1">Igazad van, váljunk szét!</option>
-                <option diff="2" attr="per" exp="10" cpn="0" step="9">Maradjunk együtt!</option>
-                <option diff="3" attr="per" exp="10" cpn="-1" step="9">Szerintem együtt kéne mennünk. Nem lehet tudni, hol leselkedik ránk veszély.</option>
+                <option diff="5" attr="per" exp="200" cpn="0" step="9">Maradjunk együtt!</option>
+                <option diff="8" attr="per" exp="250" cpn="-1" step="9">Szerintem együtt kéne mennünk. Nem lehet tudni, hol leselkedik ránk veszély.</option>
             </options>
         </scene>
 
@@ -290,7 +299,7 @@
             <art>assets/Dungeon.bmp</art>
             <storybit>Az ellenséggel soha nem tudsz végezni, mindig lesznek, akik a Sötét Urat szolgálják.</storybit>
             <options>
-                <option diff="0" attr="def" exp="10" cpn="0" step="1">A Sötét Úrnak vége, magam végeztem vele több éve ennek már.</option>
+                <option diff="0" attr="def" exp="10" cpn="0" step="1">A Sötét Úrnak vége, magam végeztem vele, több éve ennek már.</option>
             </options>
         </scene>
 
@@ -298,7 +307,7 @@
             <art>assets/Dungeon.bmp</art>
             <storybit>Ostoba, a Sötét Úrral nem lehet végezni... Mielőtt leszámolok veled, érdekel miért?</storybit>
             <options>
-                <option diff="3" attr="int" exp="100" cpn="0" step="1">Beszélj!</option>
+                <option diff="10" attr="int" exp="250" cpn="0" step="1">Beszélj!</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="2">Untatsz, készülj a harcra!</option>
             </options>
         </scene>
@@ -315,7 +324,7 @@
             <art>assets/Room.bmp</art>
             <storybit>A herceg legyőzte a varázslót és talált egy kulcsot a zsebében... Rövides kutakodás után végül megtalálta a kamrához vezető ajtót és a kulcslyukat. A kamrába belépve számos tárgyat látott mindenfelé:</storybit>
             <options>
-                <option diff="3" attr="int" exp="200" cpn="-1" step="1">Körbenézek mielőtt szólnék Findelnek.</option>
+                <option diff="12" attr="int" exp="300" cpn="-1" step="1">Körbenézek mielőtt szólnék Findelnek.</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="1">Gyorsan szólnom kell Findelnek, hogy megvan a kamra.</option>
             </options>
         </scene>
@@ -348,8 +357,9 @@
             <art>assets/Dungeon.bmp</art>
             <storybit>Findellel együtt indultok a felső szintre, ahol egy ajtó mögül zaj szűrődik ki. A kulcslyukon betekintve Findel egy tucat angmari őrt lát és szorgalmazza, hogy lesből végezzetek velük.</storybit>
             <options>
-                <option diff="2" attr="str" exp="50" cpn="0" step="1">Lesből végzek 4-el!</option>
-                <option diff="4" attr="str" exp="200" cpn="0" step="2">Lesből végzek minddel!</option>
+			    <option diff="0" attr="def" exp="100" cpn="0" step="1">Rendben Findel te mész előre!</option>
+                <option diff="5" attr="str" exp="100" cpn="0" step="1">Lesből végzek 4-el!</option>
+                <option diff="15" attr="str" exp="300" cpn="0" step="2">Lesből végzek minddel!</option>
             </options>
         </scene>
 
@@ -357,7 +367,7 @@
             <art>assets/Dungeon.bmp</art>
             <storybit>A hercegnek még szembe kell néznie 2 ellenséggel.</storybit>
             <options>
-                <option diff="0" attr="def" exp="50" cpn="0" step="1">Már csak ti maradtatok! (encounter)</option>
+                <option diff="0" attr="def" exp="50" cpn="0" step="1">Már csak ti maradtatok!</option>
             </options>
         </scene>
 
@@ -365,7 +375,7 @@
             <art>assets/Dungeon.bmp</art>
             <storybit>Miután végeztek az angmari csapattal, Findel az egyikükből még kihúzta az információt, hogy a kamra az alsó szinteken van és egy angmari varázsló őrzi a bejáratot, így megvan a következő célpont.</storybit>
             <options>
-                <option diff="0" attr="def" exp="200" cpn="0" step="1">A kamra várhat még, szétnézek a felső szinten.</option>
+                <option diff="7" attr="int" exp="200" cpn="0" step="1">A kamra várhat még, szétnézek a felső szinten.</option>
                 <option diff="0" attr="def" exp="10" cpn="-1" step="1">Nincs vesztegetni való idő, a kamrához!</option>
             </options>
         </scene>
@@ -374,7 +384,8 @@
             <art>assets/Room.bmp</art>
             <storybit>Ahogy az alsó szintre értek, Findel elintézi az ott lévő őröket... a herceg pedig rátámad a varázslóra. A varázslót legyőzve kinyitják a kamra ajtaját és számos varázstárgy és pergament találnak. Findel egy rövid keresgélés után megtalálja amit keresett, a herceg eközben talál egy tünde ékszert.Ezután a kijárat felé veszik az irányt, mikor kiértek búcsút vesznek egymástól és Findel átadja neki tünde tőrét, mondván a hercegnek nagyobb szüksége lesz ott ahová ő tart. </storybit>
             <options>
-                <option diff="0" attr="def" exp="300" cpn="-2" step="1">Köszönöm mellon!</option>
+                <option diff="0" attr="def" exp="10" cpn="-2" step="1">Köszönöm mellon!</option>
+				<option diff="0" attr="def" exp="10" cpn="1" step="1">Hasztalan egy tárgy...</option>
             </options>
         </scene>
 
@@ -449,7 +460,7 @@
             <art>assets/Camp.bmp</art>
             <storybit>Calenion: Köszönjük uram, bár szükség lenne egy kis segítségre, ha tudnál rám szánni egy-két percet négyszemközt.</storybit>
             <options>
-                <option diff="4" attr="int" exp="200" cpn="0" step="1">Segítek, legyen szó bármiről.</option>
+                <option diff="8" attr="int" exp="250" cpn="0" step="1">Segítek, legyen szó bármiről.</option>
                 <option diff="0" attr="def" exp="10" cpn="2" step="1">Sietnem kell, apám már vár engem.</option>
             </options>
         </scene>
@@ -458,8 +469,8 @@
             <art>assets/Camp.bmp</art>
             <storybit>Nézd, nem szeretném ha az öcsém erről tudomást szerezne, ha a mai napot nem élném túl, kérlek óvdd meg őt attól, hogy visszatérjen erre a helyre. Mikor vállaltuk, hogy eljövünk neki rögeszméje volt egy rég múlt világ mágiáját felkutatni, amit egy erőd falai rejtenek ezeken a földeken. Ígérd meg, hogy nem engeded neki.</storybit>
             <options>
-                <option diff="4" attr="per" exp="100" cpn="-1" step="1">Megígérem, bármi áron megóvom és vigyázok rá bárhogy is alakuljon a mai nap.</option>
-                <option diff="4" attr="per" exp="100" cpn="1" step="1">Megígérem! (nem vagy őszinte Calenionhoz)</option>
+                <option diff="4" attr="per" exp="200" cpn="-1" step="1">Megígérem, bármi áron megóvom és vigyázok rá bárhogy is alakuljon a mai nap.</option>
+                <option diff="10" attr="per" exp="350" cpn="1" step="1">Megígérem! (nem vagy őszinte Calenionhoz)</option>
             </options>
         </scene>
 
@@ -484,7 +495,7 @@
             <art>assets/Throneroom.bmp</art>
             <storybit>A trónterembe belépve megpillantották a Sötét Urat, de az nem volt nyugtalan, mintha várta volna ezt a percet a trónjában ülve (...) Jöjj ifjú herceg, van valamim számodra, amit látnod kell!</storybit>
             <options>
-                <option diff="100" attr="str" exp="10" cpn="0" step="1">Hallgass, számodra csak egy dolog vár, eleget gyötörted a népem, uralmadnak most vége!</option>
+                <option diff="50" attr="str" exp="1000" cpn="0" step="1">Hallgass, számodra csak egy dolog vár, eleget gyötörted a népem, uralmadnak most vége!</option>
                 <option diff="0" attr="def" exp="10" cpn="0" step="5">Calenion, Findel minden rendben lesz, várjatok itt!</option>
             </options>
         </scene>
@@ -682,10 +693,10 @@
             <art>assets/Tower.bmp</art>
             <storybit>Mondd, mivan az öcsémmel?</storybit>
             <options>
-                <option diff="8" attr="per" exp="200" cpn="-1" step="1">Találkoztam vele az úton idefelé jövet. Próbáltam visszatartani, de a sebeim miatt nem tudtam megakadályozni, hogy be tegye ide a lábát. Segítettem neki, majd visszatért a fekete kapuhoz.</option>
+                <option diff="10" attr="per" exp="200" cpn="-1" step="1">Találkoztam vele az úton idefelé jövet. Próbáltam visszatartani, de a sebeim miatt nem tudtam megakadályozni, hogy be tegye ide a lábát. Segítettem neki, majd visszatért a fekete kapuhoz.</option>
                 <option diff="0" attr="def" exp="50" cpn="1" step="2">A háború után a hiányod miatt elhajózott nyugatra.</option>
-                <option diff="10" attr="per" exp="200" cpn="-2" step="3">Sajnálom, de ő már nincs többé. Meghalt mikor visszatért, hogy a holttestedet elvihesse.	Segíteni akartam neki, de ezzel őt is elveszítettem.</option>
-                <option diff="10" attr="per" exp="50" cpn="2" step="4">Sajnálom, de nem tudom mi történt vele, a háború után eltűnt.</option>
+                <option diff="14" attr="per" exp="300" cpn="-2" step="3">Sajnálom, de ő már nincs többé. Meghalt mikor visszatért, hogy a holttestedet elvihesse. Segíteni akartam neki, de ezzel őt is elveszítettem.</option>
+                <option diff="14" attr="per" exp="300" cpn="2" step="4">Sajnálom, de nem tudom mi történt vele, a háború után eltűnt.</option>
             </options>
         </scene>
 

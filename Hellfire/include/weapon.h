@@ -7,13 +7,23 @@
 class Weapon : public Item
 {
     public:
-        int getType();
+        int getType() override;
+        std::string getArt() override;
+        std::string getName() override;
+        std::string getBaseName();
+        std::string getBaseArt();
         void equip();
         void dequip();
         bool isEquipped();
-
-    protected:
-
+        Weapon(std::string name, std::string art, std::string tp, int effectiveness) : Item(name, art, effectiveness) {
+             if(tp == "sword") {
+                type = WeaponType::Sword;
+             }
+             else {
+                type = WeaponType::Staff;
+             }
+             equipped = false;
+        };
     private:
         WeaponType type;
         bool equipped;

@@ -5,6 +5,7 @@ Interaction::Interaction()
 
 }
 
+//higher order metódus, mely egy callbackot burkol SDL event események lekezelésére
 int Interaction::listen(std::function<int(SDL_Event&)> callback)
 {
     Uint32 time;

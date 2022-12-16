@@ -1,0 +1,18 @@
+<encounters nOfEncounters="3">
+
+    <encounter type="3">
+        <storybit>A herceg egy ismeretlen kereskedőbe botlik, ki látszólag számos hasznos portékával rendelkezik.</storybit>
+		<option>Te kereskedő, ki tudnál segíteni egy ingyen fegyverrel vagy varázsitallal?</option>
+    </encounter>
+	
+	<encounter type="1">
+        <storybit>A herceg váratlanul egy Orc hordával találja magát szembe.</storybit>
+		<option>Nos lássuk, mennyire hanyatlottak el a képességeim az évek során.</option>
+    </encounter>
+	
+	<encounter type="2">
+        <storybit>A herceg a megpillant a földön egy érdekes tárgyat. Úgy tűnik van valami benne, de varázslat védi.</storybit>
+		<option>Megpróbálom kinyitni, hátha akad olyan varázslat az emlékeim között, mellyel megszólíthatom.</option>
+    </encounter>
+
+</encounters>

@@ -9,6 +9,7 @@ Scene::Scene(std::string sb, std::string a,  std::string odr, std::vector<Choice
     order = odr;
 }
 
+//d20 kockadobást szimuláló random értéket ad vissza
 int Scene::d20numberGenerator()
 {
     std::random_device rd;
@@ -18,40 +19,51 @@ int Scene::d20numberGenerator()
     return random_integer;
 }
 
-
-void Scene::chooseChoice(Choice* chosenChoice, Player* player)
+//attribute check során megnézzük milyen attribute-al nézünk szembe a chosenChoice-ban, és az alapján
+//megnézzük, hogy az adott player rendelkezik e elegendõ attribútummal a teljesítéshez, hozzáadva a buff és a weapon effektjeit
+//a random faktorral viszont ha 20-ast dobunk akkor a teljesítéshez elég az érték felével rendelkeznünk
+//egyébként failed lesz a choice és nem kapjuk meg a hozzá tartozó xp-t
+void Scene::attributeCheck(Choice* chosenChoice, Player* player)
 {
-    std::cout << "Type: " << chosenChoice->getType() << std::endl;
-    std::cout << "Diff: " << chosenChoice->getDifficulty() << std::endl;
-    std::cout << "Exp: "<< chosenChoice->getExperience() << std::endl;
-    std::cout << "Cpn: " << chosenChoice->getCorruption() << std::endl << std::endl;
-
-    if(chosenChoice -> isFailed())
-    {
-        return;
-    }
-
     int choiceType = chosenChoice -> getType();
+    Attributes* playerAttributes = player->getAttributes();
+    int randomFactor = d20numberGenerator();
+    int choiceDiff = chosenChoice->getDifficulty();
+    Weapon* playerWeapon = player->getEquippedWeapon();
+    int weaponType = -1;
+    int weaponBuff = 0;
+    if(playerWeapon != nullptr) {
+        weaponType = playerWeapon->getType();
+        weaponBuff = playerWeapon->getEffectiveness();
+    }
+    int buffType = player->getBuffType();
+    int buff = player->getBuff();
 
     if(chosenChoice -> getType() == static_cast<int>(ChoiceType::Default))
     {
         player->setExperience(chosenChoice->getExperience());
+        playerAttributes->setCorruption(chosenChoice->getCorruption());
         return;
     }
 
-    int randomFactor = d20numberGenerator();
-
-    int choiceDiff = chosenChoice->getDifficulty();
-    Attributes* playerAttributes = player->getAttributes();
-
     if(choiceType == static_cast<int>(ChoiceType::Strength))
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getStrength())
+        int strength = playerAttributes->getStrength();
+        if(buffType == static_cast<int>(ConsumableType::Strength))
+            strength += buff;
+        if(weaponType == static_cast<int>(WeaponType::Sword))
+            strength += weaponBuff;
+
+        if(randomFactor == 20 && choiceDiff / 2 <= strength)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getStrength())
+        else if(choiceDiff <= strength)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
         else
@@ -60,14 +72,24 @@ void Scene::chooseChoice(Choice* chosenChoice, Player* player)
             return;
         }
     }
+
     else if(choiceType == static_cast<int>(ChoiceType::Intelligence))
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getIntelligence())
+        int intelligence = playerAttributes->getIntelligence();
+        if(buffType == static_cast<int>(ConsumableType::Intelligence))
+            intelligence += buff;
+        if(weaponType == static_cast<int>(WeaponType::Staff))
+            intelligence += weaponBuff;
+        if(randomFactor == 20 && choiceDiff / 2 <= intelligence)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getIntelligence())
+        else if(choiceDiff <= intelligence)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
         else
@@ -78,12 +100,19 @@ void Scene::chooseChoice(Choice* chosenChoice, Player* player)
     }
     else
     {
-        if(randomFactor == 20 && choiceDiff / 2 <= playerAttributes->getPersuasion())
+        int persuasion = playerAttributes->getPersuasion();
+        if(buffType == static_cast<int>(ConsumableType::Persuasion))
+            persuasion += buff;
+        if(randomFactor == 20 && choiceDiff / 2 <= persuasion)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
-        else if(choiceDiff <= playerAttributes->getPersuasion())
+        else if(choiceDiff <= persuasion)
         {
+            player->setExperience(chosenChoice->getExperience());
+            playerAttributes->setCorruption(chosenChoice->getCorruption());
             return;
         }
         else
@@ -92,6 +121,18 @@ void Scene::chooseChoice(Choice* chosenChoice, Player* player)
             return;
         }
     }
+}
+
+//ha nem failed akkor attribute check történik, és a buff-ok lekerülnek a playerrõl, mivel egy choice erejéig élnek
+void Scene::chooseChoice(Choice* chosenChoice, Player* player)
+{
+    if(chosenChoice -> isFailed())
+    {
+        return;
+    }
+
+    attributeCheck(chosenChoice, player);
+    player->removeBuff();
 }
 
 std::string Scene::getArt()

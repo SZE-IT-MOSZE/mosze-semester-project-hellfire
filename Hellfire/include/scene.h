@@ -24,6 +24,7 @@ class Scene
         std::string order;
         std::string storybit;
         int d20numberGenerator();
+        void attributeCheck(Choice* chosenChoice, Player* player);
 };
 
 #endif // SCENE_H

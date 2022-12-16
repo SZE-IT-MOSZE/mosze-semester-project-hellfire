@@ -1,0 +1,44 @@
+<potions nOfPotions="6">
+	<potion>
+		<name>Small Potion of Strength</name>
+		<art>str_potion</art>
+		<type>str</type>
+		<charges>3</charges>
+		<effect>2</effect>
+	</potion>
+	<potion>
+		<name>Small Potion of Intellect</name>
+		<art>int_potion</art>
+		<type>int</type>
+		<charges>3</charges>
+		<effect>2</effect>
+	</potion>
+	<potion>
+		<name>Small Potion of Persuasion</name>
+		<art>per_potion</art>
+		<type>per</type>
+		<charges>3</charges>
+		<effect>2</effect>
+	</potion>
+	<potion>
+		<name>Medium Potion of Strength</name>
+		<art>str_potion</art>
+		<type>str</type>
+		<charges>3</charges>
+		<effect>5</effect>
+	</potion>
+	<potion>
+		<name>Medium Potion of Intellect</name>
+		<art>int_potion</art>
+		<type>int</type>
+		<charges>3</charges>
+		<effect>5</effect>
+	</potion>
+	<potion>
+		<name>Medium Potion of Persuasion</name>
+		<art>per_potion</art>
+		<type>per</type>
+		<charges>3</charges>
+		<effect>5</effect>
+	</potion>
+</potions>
